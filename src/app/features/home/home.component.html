@@ -1,0 +1,155 @@
+<!-- =============================================
+     HERO
+============================================= -->
+<section class="hero">
+    <div class="hero__bg"></div>
+    <div class="hero__overlay"></div>
+  
+    <!-- Decorative butterflies -->
+    <app-butterfly top="14%" left="6%"  size="80px" colorLeft="#B8CCE8" colorRight="#E2C8EC" [delay]="1" opacity="0.6"></app-butterfly>
+    <app-butterfly top="65%" right="8%" size="55px" colorLeft="#DCE8F5" colorRight="#F3EAF7" [delay]="2" opacity="0.6"></app-butterfly>
+    <app-butterfly top="28%" right="15%" size="68px" colorLeft="#C9A9D4" colorRight="#92A8D1" [delay]="3" opacity="0.6"></app-butterfly>
+    <app-butterfly top="75%" left="12%" size="45px" colorLeft="#E2C8EC" colorRight="#B8CCE8" [delay]="4" opacity="0.6"></app-butterfly>
+  
+    <div class="hero__content">
+      <span class="hero__ornament">✦ · · · ✦ · · · ✦</span>
+      <h1 class="hero__names">
+        <span class="fade-in-up">Taís</span>
+        <span class="hero__ampersand fade-in-up fade-in-up--d1">&</span>
+        <span class="fade-in-up fade-in-up--d2">Gabriel</span>
+      </h1>
+      <div class="hero__divider">
+        <span>❧</span>
+      </div>
+      <p class="hero__date fade-in-up fade-in-up--d3">
+        19 de Setembro de 2026 &middot; 16h
+      </p>
+    </div>
+  
+    <div class="hero__scroll">
+      <span>rolar</span>
+      <div class="hero__scroll-arrow"></div>
+    </div>
+  </section>
+  
+  <!-- =============================================
+       COUNTDOWN
+  ============================================= -->
+  <section class="section countdown-section">
+    <div class="ornament">
+      <span class="ornament__icon">🦋</span>
+    </div>
+    <div class="section__header">
+      <span class="section-eyebrow">Faltam</span>
+      <h2 class="section-title" style="font-weight: 700;">Contagem Regressiva</h2>
+    </div>
+    <app-countdown></app-countdown>
+    <div class="ornament" style="margin-top: 2rem;">
+      <span class="ornament__icon">✦</span>
+    </div>
+  </section>
+  
+  <!-- =============================================
+       CTA
+  ============================================= -->
+  <section class="cta-section">
+    <div class="cta-section__inner">
+      <span class="section-eyebrow">Participe da nossa história</span>
+      <h2 class="section-title">Celebre conosco</h2>
+      <p class="cta-section__text">
+        Sua presença é o que mais importa para nós.
+        Mas se quiser nos presentear, temos algumas ideias... 😊
+      </p>
+      <div class="cta-section__buttons">
+        <a routerLink="/presentes" class="btn btn--primary">
+          🎁 Lista de Presentes
+        </a>
+        <a routerLink="/presenca" class="btn btn--outline"> 
+          💌 Confirmar Presença
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- =============================================
+       MENSAGEM
+  ============================================= -->
+  <section class="section message-section">
+    <div class="message-section__content">
+      <div class="ornament">
+        <span class="ornament__icon">🦋</span>
+      </div>
+      <blockquote class="message-section__quote">
+        "Queridos amigos e família, cada um de vocês faz parte<br>
+        da nossa história de amor. Neste dia especial, não queremos<br>
+        presentes embrulhados — queremos que vocês nos ajudem<br>
+        a construir nosso lar, contribuindo com o que puderem<br>
+        e nos enviando todo o seu carinho.<br>
+        <em>A sua presença já é o nosso maior presente.</em>"
+      </blockquote>
+      <div class="ornament">
+        <span class="ornament__icon">✦</span>
+      </div>
+      <p class="message-section__signature">Com amor, Taís &amp; Gabriel</p>
+    </div>
+  </section>
+  
+  <!-- =============================================
+       LOCAL PREVIEW
+  ============================================= -->
+  <section class="section location-preview">
+    <div class="location-preview__inner">
+      <div class="section__header">
+        <span class="section-eyebrow">Como chegar</span>
+        <h2 class="section-title" style="font-weight: 700;">O Local da Celebração</h2>
+      </div>
+  
+      <div class="location-preview__grid">
+        <div class="location-preview__info">
+          <h3 style="font-weight: 700;">Natureza Viva</h3>
+          <p>Um espaço encantador em meio à natureza de Pernambuco, perfeito para o nosso dia mágico.</p>
+          <div class="address-box">
+            <div class="address-box__line">
+              <span>📍</span>
+              <div>
+                <strong>Rodovia PE 50, km 27</strong><br>
+                Zona Rural — Feira Nova, PE<br>
+                CEP 55715-000
+              </div>
+            </div>
+            <div class="address-box__line">
+              <span>🕓</span>
+              <div>Cerimônia às <strong>16h00</strong></div>
+            </div>
+            <div class="address-box__line">
+              <span>🚗</span>
+              <div>Estacionamento disponível no local</div>
+            </div>
+          </div>
+          <a routerLink="/local" class="btn btn--outline" style="margin-top: 1.5rem; display: inline-flex;">
+            📍 Ver instruções completas
+          </a>
+        </div>
+  
+        <div class="location-preview__map">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.94!2d-35.3712531!3d-7.9517943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7aba595a3b46311%3A0x15813e4be6340df9!2sRestaurante%20Natureza%20Viva!5e0!3m2!1spt-BR!2sbr!4v1680000000000!5m2!1spt-BR!2sbr"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p>
+      <strong>Taís &amp; Gabriel</strong>
+      &nbsp;·&nbsp;
+      19 de Setembro de 2026
+      &nbsp;·&nbsp;
+      Feito com 💜 e 💙
+    </p>
+  </footer>

@@ -1,0 +1,393 @@
+// ============================================================
+// DESIGN SYSTEM — Taís & Gabriel — Serenity Blue + Elvish Lilac
+// ============================================================
+
+// --- Google Fonts já no index.html ---
+
+// ============================================================
+// CSS CUSTOM PROPERTIES
+// ============================================================
+:root {
+  --serenity:        #92A8D1;
+  --serenity-light:  #B8CCE8;
+  --serenity-pale:   #DCE8F5;
+  --serenity-dark:   #5E7FA8;
+  --lilac:           #C9A9D4;
+  --lilac-light:     #E2C8EC;
+  --lilac-pale:      #F3EAF7;
+  --lilac-dark:      #9A6EB0;
+  --cream:           #FAF7F2;
+  --warm-white:      #FDFBF8;
+  --text-dark:       #2C2035;
+  --text-mid:        #5A4E6A;
+  --text-soft:       #8A7A9A;
+  --gold:            #C8A96E;
+  --gold-light:      #E8D0A0;
+
+  --font-display: 'Cinzel Decorative', serif;
+  --font-serif:   'Cormorant Garamond', serif;
+  --font-body:    'Jost', sans-serif;
+
+  --nav-h: 70px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --shadow-sm: 0 2px 12px rgba(92,127,168,0.08);
+  --shadow-md: 0 4px 24px rgba(92,127,168,0.12);
+  --shadow-lg: 0 8px 40px rgba(92,127,168,0.18);
+}
+
+// ============================================================
+// RESET
+// ============================================================
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--text-dark);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: var(--font-body); }
+img { max-width: 100%; display: block; }
+
+// ============================================================
+// TYPOGRAPHY UTILITIES
+// ============================================================
+.font-display { font-family: var(--font-display); }
+.font-serif   { font-family: var(--font-serif); }
+.font-body    { font-family: var(--font-body); }
+
+.section-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-dark);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+// ============================================================
+// BUTTONS
+// ============================================================
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2rem;
+  border: none;
+  border-radius: 50px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &--primary {
+    background: linear-gradient(135deg, var(--serenity-dark), var(--lilac-dark));
+    color: white;
+    box-shadow: 0 4px 20px rgba(92,127,168,0.3);
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(92,127,168,0.4);
+    }
+    &:active { transform: translateY(0); }
+    &:disabled {
+      background: var(--serenity-pale);
+      color: var(--text-soft);
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
+  }
+
+  &--outline {
+    background: transparent;
+    color: var(--serenity-dark);
+    border: 1.5px solid var(--serenity);
+    &:hover {
+      background: var(--serenity);
+      color: white;
+      transform: translateY(-2px);
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: var(--text-soft);
+    &:hover { color: var(--serenity-dark); }
+  }
+
+  &--full { width: 100%; }
+}
+
+// ============================================================
+// FORM ELEMENTS
+// ============================================================
+.form-group {
+  margin-bottom: 1.2rem;
+
+  label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    margin-bottom: 0.4rem;
+  }
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 0.9rem 1.1rem;
+    border: 1.5px solid var(--serenity-light);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    color: var(--text-dark);
+    background: var(--warm-white);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    appearance: none;
+
+    &:focus {
+      border-color: var(--serenity);
+      box-shadow: 0 0 0 3px rgba(146,168,209,0.15);
+    }
+
+    &::placeholder { color: var(--text-soft); opacity: 0.7; }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  &.has-error {
+    input, textarea, select { border-color: #e74c3c; }
+    .error-msg {
+      display: block;
+      font-size: 0.75rem;
+      color: #e74c3c;
+      margin-top: 0.3rem;
+    }
+  }
+}
+
+// ============================================================
+// CARD
+// ============================================================
+.card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(146,168,209,0.18);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+
+  &--hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+// ============================================================
+// ORNAMENT DIVIDER
+// ============================================================
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin: 2rem auto;
+  max-width: 360px;
+
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--serenity-light), transparent);
+  }
+
+  .ornament__icon {
+    color: var(--gold);
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+}
+
+// ============================================================
+// BADGE / TAG
+// ============================================================
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  &--available {
+    background: var(--serenity-pale);
+    color: var(--serenity-dark);
+  }
+  &--reserved {
+    background: var(--lilac-pale);
+    color: var(--lilac-dark);
+  }
+  &--confirm {
+    background: #d5f5e3;
+    color: #27ae60;
+  }
+  &--maybe {
+    background: #fef9e7;
+    color: #e67e22;
+  }
+  &--decline {
+    background: #fdecea;
+    color: #e74c3c;
+  }
+}
+
+// ============================================================
+// SECTION SPACING
+// ============================================================
+.section {
+  padding: 5rem 1.5rem;
+
+  &__header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+}
+
+// ============================================================
+// PAGE HEADER BAND
+// ============================================================
+.page-header {
+  padding: 3.5rem 1.5rem 2.5rem;
+  background: linear-gradient(135deg, var(--serenity-pale) 0%, var(--lilac-pale) 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-top: var(--nav-h);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--serenity), var(--lilac), var(--serenity));
+  }
+}
+
+// ============================================================
+// TABLE (admin)
+// ============================================================
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    background: var(--serenity-pale);
+    padding: 0.85rem 1.2rem;
+    text-align: left;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--serenity-dark);
+    font-weight: 500;
+  }
+
+  td {
+    padding: 0.85rem 1.2rem;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    border-bottom: 1px solid rgba(146,168,209,0.1);
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  tr:hover td { background: var(--serenity-pale); }
+}
+
+// ============================================================
+// SCROLLBAR
+// ============================================================
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb {
+  background: var(--serenity-light);
+  border-radius: 3px;
+}
+
+// ============================================================
+// ANIMATIONS
+// ============================================================
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes flutter {
+  0%, 100% { transform: translateY(0) rotate(-5deg) scaleX(1); }
+  25%       { transform: translateY(-10px) rotate(3deg) scaleX(0.85); }
+  50%       { transform: translateY(-18px) rotate(-2deg) scaleX(1); }
+  75%       { transform: translateY(-7px) rotate(4deg) scaleX(0.9); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+.fade-in-up { animation: fadeInUp 0.6s ease both; }
+.fade-in-up--d1 { animation-delay: 0.1s; }
+.fade-in-up--d2 { animation-delay: 0.2s; }
+.fade-in-up--d3 { animation-delay: 0.3s; }
+
+// ============================================================
+// RESPONSIVE HELPERS
+// ============================================================
+@media (max-width: 768px) {
+  .section { padding: 3rem 1rem; }
+  .hide-mobile { display: none !important; }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop { display: none !important; }
+}

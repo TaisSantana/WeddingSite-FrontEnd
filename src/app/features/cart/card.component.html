@@ -1,0 +1,196 @@
+<div class="page-header">
+  <span class="section-eyebrow">Seus itens selecionados</span>
+  <h1 class="section-title">Carrinho</h1>
+</div>
+
+<div class="carrinho-wrapper">
+
+  <!-- ══ VAZIO ══ -->
+  <div class="empty-cart" *ngIf="cart.count() === 0 && etapa === 'FORMULARIO'">
+    <span class="empty-cart__icon">🛒</span>
+    <h2 class="empty-cart__title">Seu carrinho está vazio</h2>
+    <p class="empty-cart__sub">Que tal escolher um presente para os noivos?</p>
+    <a routerLink="/presentes" class="btn btn--primary">🎁 Ver Presentes</a>
+  </div>
+
+  <div class="cart-layout" *ngIf="cart.count() > 0 || etapa !== 'FORMULARIO'">
+
+    <!-- ── Itens ── -->
+    <div class="cart-items"
+         *ngIf="etapa === 'FORMULARIO' || etapa === 'PIX_AGUARDANDO'">
+      <h2 class="cart-items__title">Presentes selecionados</h2>
+
+      <div class="cart-item card" *ngFor="let item of cart.items()">
+        <div class="cart-item__info">
+          <div class="cart-item__name">{{ item.presente.nome }}</div>
+          <div class="cart-item__price">{{ item.presente.valor | brl }}</div>
+        </div>
+        <button
+          class="cart-item__remove"
+          (click)="remove(item.presente.id)"
+          [disabled]="etapa !== 'FORMULARIO'"
+          title="Remover">✕</button>
+      </div>
+
+      <div class="cart-total">
+        <span class="cart-total__label">Total</span>
+        <span class="cart-total__value">{{ cart.total() | brl }}</span>
+      </div>
+    </div>
+
+    <!-- ══ ETAPA 1 — FORMULÁRIO ══ -->
+    <div class="checkout card" *ngIf="etapa === 'FORMULARIO'">
+      <h2 class="checkout__title">Seus dados</h2>
+
+      <div class="form-group" [class.has-error]="erros['nome']">
+        <label>Seu nome *</label>
+        <input type="text" [(ngModel)]="nome"
+               placeholder="Como você quer aparecer para os noivos">
+        <span class="error-msg" *ngIf="erros['nome']">{{ erros['nome'] }}</span>
+      </div>
+
+      <div class="form-group" [class.has-error]="erros['email']">
+        <label>Seu email *</label>
+        <input type="email" [(ngModel)]="email"
+               placeholder="Você receberá a confirmação de pagamento aqui">
+        <span class="error-msg" *ngIf="erros['email']">{{ erros['email'] }}</span>
+      </div>
+
+      <div class="form-group">
+        <label>Mensagem para os noivos</label>
+        <textarea [(ngModel)]="mensagem" rows="2"
+                  placeholder="Escreva algo especial... 💌"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Forma de pagamento *</label>
+        <div class="pay-options">
+
+          <div class="pay-option"
+               [class.pay-option--selected]="pagamento === 'PIX'"
+               (click)="setPagamento('PIX')">
+            <span class="pay-option__icon">📱</span>
+            <span class="pay-option__label">Pix</span>
+            <span class="pay-option__sub">Instantâneo · Copia e cola</span>
+          </div>
+
+          <div class="pay-option"
+               [class.pay-option--selected]="pagamento === 'CARTAO'"
+               (click)="setPagamento('CARTAO')">
+            <span class="pay-option__icon">💳</span>
+            <span class="pay-option__label">Cartão</span>
+            <span class="pay-option__sub">Via Mercado Pago · Até 12x</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Info Pix -->
+      <div class="info-banner info-banner--pix" *ngIf="pagamento === 'PIX'">
+        <span>📲</span>
+        <p>Você receberá um código <strong>copia e cola</strong> com o valor exato.
+           Pague pelo app do seu banco e a confirmação chega automaticamente. 🦋</p>
+      </div>
+
+      <!-- Info Cartão -->
+      <div class="info-banner info-banner--card" *ngIf="pagamento === 'CARTAO'">
+        <span>🔒</span>
+        <p>Você será redirecionado para o ambiente seguro do
+           <strong>Mercado Pago</strong> para inserir os dados do cartão.
+           Seus dados nunca passam pelos nossos servidores.</p>
+      </div>
+
+      <button
+        class="btn btn--primary btn--full checkout__submit"
+        [disabled]="cart.count() === 0"
+        (click)="prosseguir()">
+        <ng-container *ngIf="pagamento === 'PIX'">
+          📱 Gerar Pix — {{ cart.total() | brl }}
+        </ng-container>
+        <ng-container *ngIf="pagamento === 'CARTAO'">
+          💳 Ir para o Checkout — {{ cart.total() | brl }}
+        </ng-container>
+      </button>
+    </div>
+
+    <!-- ══ ETAPA 2 — PIX AGUARDANDO ══ -->
+    <div class="pix-panel card" *ngIf="etapa === 'PIX_AGUARDANDO' && pixData">
+
+      <div class="pix-panel__header">
+        <h2 class="pix-panel__title">Pague com Pix</h2>
+        <div class="pix-panel__expires">
+          ⏱ Expira em <strong>{{ pixTempoFormatado }}</strong>
+        </div>
+      </div>
+
+      <p class="pix-panel__valor">{{ cart.total() | brl }}</p>
+
+      <!-- QR Code -->
+      <div class="pix-qr" *ngIf="pixData.qrCodeBase64">
+        <img
+          [src]="'data:image/png;base64,' + pixData.qrCodeBase64"
+          alt="QR Code Pix"
+          class="pix-qr__img">
+        <p class="pix-qr__hint">Escaneie com o app do seu banco</p>
+      </div>
+
+      <div class="pix-separator">ou use o código copia e cola</div>
+
+      <!-- Copia e cola -->
+      <div class="pix-copy">
+        <div class="pix-copy__code">{{ pixData.copiaECola }}</div>
+        <button class="pix-copy__btn" (click)="copiarPix()">
+          {{ pixCopiado ? '✓ Copiado!' : '📋 Copiar' }}
+        </button>
+      </div>
+
+      <!-- Instruções -->
+      <ol class="pix-steps">
+        <li>Abra o app do seu banco</li>
+        <li>Escolha <strong>Pix → Copia e Cola</strong> (ou escaneie o QR acima)</li>
+        <li>Cole o código e confirme o valor de <strong>{{ cart.total() | brl }}</strong></li>
+        <li>Aguarde a confirmação automática nesta tela 🦋</li>
+      </ol>
+
+      <div class="pix-polling">
+        <span class="pix-polling__dot"></span>
+        Aguardando confirmação do pagamento...
+      </div>
+
+      <button class="btn btn--ghost"
+              style="margin-top:1.2rem; font-size:.8rem"
+              (click)="voltarParaFormulario()">
+        ← Cancelar e voltar
+      </button>
+    </div>
+
+    <!-- ══ LOADING (gerando Pix ou redirecionando para MP) ══ -->
+    <div class="processing-panel" *ngIf="etapa === 'CARTAO_PROCESSANDO'">
+      <div class="processing-panel__spinner"></div>
+      <h2 class="processing-panel__title">
+        {{ pagamento === 'PIX' ? 'Gerando seu Pix...' : 'Abrindo o Checkout...' }}
+      </h2>
+      <p class="processing-panel__sub">
+        {{ pagamento === 'CARTAO'
+           ? 'Você será redirecionado para o Mercado Pago em instantes.'
+           : 'Por favor, aguarde.' }}
+      </p>
+    </div>
+
+    <!-- ══ SUCESSO (Pix confirmado) ══ -->
+    <div class="success-panel" *ngIf="etapa === 'SUCESSO'">
+      <div class="success-panel__icon">💜</div>
+      <h2 class="success-panel__title">Presente confirmado!</h2>
+      <p class="success-panel__sub">
+        Obrigado, <strong>{{ nome }}</strong>!<br>
+        Enviamos uma confirmação para <strong>{{ email }}</strong>.<br>
+        Os noivos também foram notificados. 🦋
+      </p>
+      <div class="success-panel__badge">📱 Pago via Pix</div>
+      <a routerLink="/inicio" class="btn btn--primary" style="margin-top:2rem">
+        🏠 Voltar ao Início
+      </a>
+    </div>
+
+  </div>
+</div>

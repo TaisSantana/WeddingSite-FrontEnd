@@ -1,0 +1,35 @@
+<div class="countdown">
+  <div class="countdown__boxes">
+    <div
+      *ngFor="let unit of units(); trackBy: trackByLabel"
+      class="countdown__box">
+
+      <span class="countdown__number">
+        {{ unit.value }}
+      </span>
+
+      <span class="countdown__label">
+        {{ unit.label }}
+      </span>
+
+    </div>
+  </div>
+
+  <div class="countdown__progress">
+    <div class="countdown__progress-info">
+      <span>Data do Casamento</span>
+      <span>{{ percentage() }}%</span>
+    </div>
+
+    <div class="countdown__progress-bar">
+      <div
+        class="countdown__progress-fill"
+        [style.width]="percentage() + '%'">
+      </div>
+    </div>
+
+    <p class="countdown__progress-text">
+      {{ progressText() }}
+    </p>
+  </div>
+</div>

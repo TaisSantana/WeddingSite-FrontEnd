@@ -1,0 +1,142 @@
+<div class="page-header">
+    <span class="section-eyebrow">Você está na lista?</span>
+    <h1 class="section-title" style="font-weight: 700;">Confirmar Presença</h1>
+    <p class="page-header__sub">
+      Cada convite tem um código único. Digite abaixo para encontrar o seu grupo.
+    </p>
+  </div>
+  <app-toast></app-toast>
+  
+  <div class="presenca-wrapper">
+  
+    <!-- BUSCA POR CÓDIGO -->
+    <div class="card code-card">
+      <h2 class="code-card__title">Qual é o seu código?</h2>
+      <p class="code-card__desc">
+        O código está no seu convite digital.<br>
+        Exemplo: <strong>TG001</strong>, <strong>TG002</strong>...
+      </p>
+  
+      <div class="code-input-group">
+        <input
+          type="text"
+          class="code-input"
+          [value]="codigo()"
+          (input)="codigo.set($any($event.target).value.toUpperCase())"
+          (keydown.enter)="buscar()"
+          placeholder="TG001"
+          maxlength="6"
+          autocomplete="off"
+          autocapitalize="characters">
+  
+        <button
+          class="btn btn--primary code-input-group__btn"
+          [disabled]="loading()"
+          (click)="buscar()">
+  
+          <span *ngIf="loading(); else buscarIcon">⏳</span>
+          <ng-template #buscarIcon>🔍 Buscar</ng-template>
+  
+        </button>
+      </div>
+  
+      <p *ngIf="notFound()" class="code-card__error">
+        ❌ Código não encontrado. Verifique seu convite ou fale com os noivos. 💌
+      </p>
+
+      <p class="code-card__hint">
+        Não encontrou seu código? Fale com os noivos! 🦋
+      </p>
+    </div>
+  
+    <!-- LISTA DA FAMÍLIA -->
+    <div *ngIf="convite() as c" class="card family-card">
+  
+      <div class="family-card__header">
+        <div>
+          <span class="family-card__code">{{ c.codigo }}</span>
+          <h3 class="family-card__family">{{ c.familia }}</h3>
+        </div>
+  
+        <div class="family-card__summary">
+          <span class="badge badge--confirm">
+            {{ c.convidados | confirmados }} ✓
+          </span>
+        </div>
+      </div>
+  
+      <p class="family-card__instruction">
+        Clique em uma opção para cada convidado e depois salve:
+      </p>
+  
+      <div class="guests-list">
+        <div
+          *ngFor="let g of c.convidados; trackBy: trackById"
+          class="guest-row">
+  
+          <div class="guest-row__info">
+            <span class="guest-row__name">{{ g.nome }}</span>
+  
+            <span *ngIf="getStatus(g.id) !== 'PENDENTE'"
+              class="badge"
+              [ngClass]="{
+                'badge--confirm':  getStatus(g.id) === 'CONFIRMADO',
+                'badge--maybe':    getStatus(g.id) === 'TALVEZ',
+                'badge--decline':  getStatus(g.id) === 'NAO_VEM'
+              }">
+  
+              {{ statusLabel(getStatus(g.id)) }}
+  
+            </span>
+          </div>
+  
+          <div class="rsvp-btns">
+            <button
+              class="rsvp-btn rsvp-btn--confirm"
+              [class.selected]="getStatus(g.id) === 'CONFIRMADO'"
+              (click)="setStatus(g.id, 'CONFIRMADO')">
+              ✓ Vou!
+            </button>
+  
+            <button
+              class="rsvp-btn rsvp-btn--maybe"
+              [class.selected]="getStatus(g.id) === 'TALVEZ'"
+              (click)="setStatus(g.id, 'TALVEZ')">
+              ? Talvez
+            </button>
+  
+            <button
+              class="rsvp-btn rsvp-btn--decline"
+              [class.selected]="getStatus(g.id) === 'NAO_VEM'"
+              (click)="setStatus(g.id, 'NAO_VEM')">
+              ✗ Não
+            </button>
+          </div>
+  
+        </div>
+      </div>
+  
+      <button
+        class="btn btn--primary btn--full family-card__save"
+        [disabled]="saving()"
+        (click)="salvar()">
+  
+        <span *ngIf="saving(); else salvarText">⏳ Salvando...</span>
+        <ng-template #salvarText>💌 Salvar Confirmações</ng-template>
+  
+      </button>
+  
+    </div>
+  
+    <!-- DICAS -->
+    <div class="tips-card card">
+      <h3 class="tips-card__title">💡 Como funciona?</h3>
+      <ul class="tips-card__list">
+        <li>Cada família recebeu um código único no convite digital.</li>
+        <li>Você pode confirmar aos poucos — volte aqui quantas vezes quiser.</li>
+        <li>Selecione <strong>Vou!</strong>, <strong>Talvez</strong> ou <strong>Não</strong> para cada pessoa e salve.</li>
+        <li>Não encontrou seu código? Entre em contato com os noivos. 💜</li>
+      </ul>
+    </div>
+  
+  </div>

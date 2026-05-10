@@ -1,0 +1,85 @@
+<nav class="navbar" [class.navbar--scrolled]="scrolled()">
+  <div class="navbar__inner">
+
+    <a routerLink="/" class="navbar__logo" (click)="closeMenu()">
+      <span class="navbar__logo-icon">🦋</span>
+      <span class="navbar__logo-text">T &amp; G</span>
+    </a>
+
+    <!-- Desktop -->
+    <ul class="navbar__links">
+      <li>
+        <a routerLink="/" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">🏠</span> Início
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/local" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">📍</span> Local
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/presentes" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">🎁</span> Presentes
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/carrinho" routerLinkActive="active" class="cart-link" (click)="closeMenu()">
+          <span class="nav-icon">🛒</span> Carrinho
+          <span *ngIf="cart.count() > 0" class="cart-badge">
+            {{ cart.count() }}
+          </span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/presenca" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">💌</span> Presença
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/admin" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">🔐</span> Admin
+        </a>
+      </li>
+    </ul>
+
+    <!-- Mobile button -->
+    <button
+      class="navbar__hamburger"
+      (click)="toggleMenu()"
+      [class.open]="menuOpen()">
+
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="navbar__mobile" [class.open]="menuOpen()">
+
+    <a routerLink="/" (click)="closeMenu()">🏠 Início</a>
+
+    <a routerLink="/local" (click)="closeMenu()">📍 Local</a>
+
+    <a routerLink="/presentes" (click)="closeMenu()">🎁 Presentes</a>
+
+    <a routerLink="/carrinho" (click)="closeMenu()">
+      🛒 Carrinho
+      <span *ngIf="cart.count() > 0" class="cart-badge">
+        {{ cart.count() }}
+      </span>
+    </a>
+
+    <a routerLink="/presenca" (click)="closeMenu()">💌 Presença</a>
+
+    <a routerLink="/admin" (click)="closeMenu()">🔐 Admin</a>
+
+  </div>
+</nav>

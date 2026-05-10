@@ -1,0 +1,208 @@
+.gift-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    max-width: 720px;
+    margin: 1.5rem auto 0;
+    background: white;
+    border-radius: var(--radius-md);
+    padding: 1rem 1.4rem;
+    border: 1px solid var(--serenity-light);
+    text-align: left;
+  
+    &__icon { font-size: 1.4rem; flex-shrink: 0; }
+  
+    &__text {
+      font-size: 0.83rem;
+      color: var(--text-mid);
+      line-height: 1.65;
+  
+      strong { color: var(--serenity-dark); }
+    }
+  }
+  
+  // ── FILTERS ──────────────────────────────────
+  .filters {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  
+    &__group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+  
+    &__label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-right: 0.3rem;
+    }
+  }
+  
+  .filter-btn {
+    padding: 0.35rem 1rem;
+    border: 1.5px solid var(--serenity-light);
+    border-radius: 20px;
+    background: transparent;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+  
+    &.active,
+    &:hover {
+      background: var(--serenity-pale);
+      border-color: var(--serenity);
+      color: var(--serenity-dark);
+    }
+  }
+  
+  // ── GRID ─────────────────────────────────────
+  .presentes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.6rem;
+    padding: 2rem 1.5rem 5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  // ── GIFT CARD ────────────────────────────────
+  .gift-card {
+    display: flex;
+    flex-direction: column;
+  
+    &__image {
+      height: 190px;
+      background: linear-gradient(135deg, var(--serenity-pale), var(--lilac-pale));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+  
+    &__emoji {
+      font-size: 4.5rem;
+      line-height: 1;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
+    }
+  
+    &__category {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: white;
+      color: var(--serenity-dark);
+      padding: 0.2rem 0.65rem;
+      border-radius: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+  
+    &__body {
+      padding: 1.4rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+  
+    &__name {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-style: italic;
+      color: var(--text-dark);
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+    }
+  
+    &__desc {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      line-height: 1.6;
+      flex: 1;
+      margin-bottom: 1rem;
+    }
+  
+    &__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+  
+    &__price {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-style: italic;
+      color: var(--serenity-dark);
+      font-weight: 600;
+    }
+  
+    &__btn {
+      font-size: 0.78rem;
+    }
+  }
+  
+  // ── EMPTY STATE ──────────────────────────────
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-soft);
+  
+    p { font-size: 1rem; margin-bottom: 1.5rem; }
+  } 
+
+  .search-bar {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .search-bar__input {
+    width: 100%;
+    max-width: 420px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.2s ease;
+  }
+  
+  .search-bar__input:focus {
+    border-color: var(--serenity);
+    box-shadow: 0 0 0 3px rgba(146, 136, 255, 0.2);
+  }
+
+  .gift-card__image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .gift-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  
+  .gift-card:hover .gift-card__img {
+    transform: scale(1.05);
+  }

@@ -1,0 +1,79 @@
+<div class="page-header">
+  <span class="section-eyebrow">Lista de casamento</span>
+  <h1 class="section-title" style="font-weight: 700;">Nossos Presentes</h1>
+
+  <!-- Banner explicativo -->
+  <div class="gift-banner">
+    <span class="gift-banner__icon">💡</span>
+    <p class="gift-banner__text">
+      <strong>Como funciona?</strong> Todos os presentes são <strong>simbólicos</strong> —
+      ao escolher um item, você contribui com o valor diretamente para nós via Pix ou cartão.
+      É nossa forma de montar nosso lar e realizar nossos sonhos com o carinho de cada um de vocês. 🏡
+    </p>
+  </div>
+</div>
+
+<!-- FILTROS -->
+<div class="filters">
+
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="🔎 Buscar presente..."
+      [value]="busca()"
+      (input)="setBusca($any($event.target).value)"
+      class="search-bar__input"
+    />
+  </div>
+</div>
+
+<!-- GRID -->
+<div class="presentes-grid">
+
+  <div
+    *ngFor="let p of presentesFiltrados(); trackBy: trackById"
+    class="gift-card card card--hover">
+
+    <div class="gift-card__image">
+      <img
+          class="gift-card__img"
+          [src]="p.imagemUrl"
+          [alt]="p.nome"
+        />
+    </div>
+    
+
+    <div class="gift-card__body">
+      <h3 class="gift-card__name">{{ p.nome }}</h3>
+      <p class="gift-card__desc">{{ p.descricao }}</p>
+
+      <div class="gift-card__footer">
+        <span class="gift-card__price">{{ p.valor | brl }}</span>
+      </div>
+
+      <!-- BOTÃO -->
+      <button
+        class="btn btn--full gift-card__btn"
+        [class.btn--primary]="!isInCart(p.id)"
+        [class.btn--outline]="isInCart(p.id)"
+        (click)="addToCart(p)">
+        <!-- DISPONÍVEL -->
+        <ng-container *ngIf="isInCart(p.id); else comprar">
+          🛒 No carrinho
+        </ng-container>
+      
+        <ng-template #comprar>
+          🎁 Presentear
+        </ng-template>
+
+      </button>
+
+    </div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div *ngIf="presentesFiltrados().length === 0" class="empty-state">
+    <p>😔 Nenhum presente encontrado com esses filtros.</p>
+  </div>
+
+</div>
