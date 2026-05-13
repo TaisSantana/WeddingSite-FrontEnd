@@ -10,14 +10,14 @@ export const routes: Routes = [
   {
     path: 'presentes',
     loadComponent: () =>
-      import('./features/gifts/gifts.component')
-        .then(m => m.GiftsComponent)
+      import('./features/catalogo-presente/catalogo-presente.component')
+        .then(m => m.CatalogoPresenteComponent)
   },
   {
     path: 'presenca',
     loadComponent: () =>
-      import('./features/rsvp/rsvp.component')
-        .then(m => m.RsvpComponent)
+      import('./features/convite/convite.component')
+        .then(m => m.ConviteComponent)
   },
   {
     path: 'local',
@@ -28,13 +28,13 @@ export const routes: Routes = [
   {
     path: 'carrinho',
     loadComponent: () =>
-      import('./features/cart/cart.component')
-        .then(m => m.CartComponent)
+      import('./features/catalogo-presente/catalogo-presente.component')
+        .then(m => m.CatalogoPresenteComponent)
   },
   {
     path: 'admin',
     loadComponent: () =>
-      import('./features/auth/admin.component')
+      import('./features/admin/admin.component')
         .then(m => m.AdminComponent)
   },
 
@@ -43,17 +43,17 @@ export const routes: Routes = [
     // MP redireciona para: /carrinho/sucesso?collection_status=approved&...
     path: 'carrinho/sucesso',
     loadComponent: () =>
-      import('./features/cart/retorno-mp.component').then(m => m.RetornoMpComponent),
+      import('./features/carrinho/retorno-mp.component').then(m => m.RetornoMpComponent),
   },
   {
     path: 'carrinho/pendente',
     loadComponent: () =>
-      import('./features/cart/retorno-mp.component').then(m => m.RetornoMpComponent),
+      import('./features/carrinho/retorno-mp.component').then(m => m.RetornoMpComponent),
   },
   {
     path: 'carrinho/falha',
     loadComponent: () =>
-      import('./features/cart/retorno-mp.component').then(m => m.RetornoMpComponent),
+      import('./features/carrinho/retorno-mp.component').then(m => m.RetornoMpComponent),
   },
 
   {

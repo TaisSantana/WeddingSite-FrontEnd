@@ -1,4 +1,5 @@
-import { Gift } from "../gifts/gift.model";
+import { CatalogoPresente } from "../catalogo-presente/catalogo-presente.model";
+
 
 // --- Presente ---
 export type FormaPagamento = 'PIX' | 'CARTAO';
@@ -18,7 +19,7 @@ export interface PaymentResponse {
   formaPagamento: FormaPagamento;
   total: number;
   criadoEm: string;
-  itens: { presente: Gift; valorPago: number }[];
+  itens: { presente: CatalogoPresente; valorPago: number }[];
 }
 
 

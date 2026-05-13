@@ -1,8 +1,8 @@
 import { Component, inject, HostListener, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIf } from '@angular/common';
-import { AuthService } from 'src/app/features/auth/Auth.service';
-import { CartService } from 'src/app/features/cart/Cart.service';
+import { AuthService } from 'src/app/features/admin/Auth.service';
+import { CarrinhoService } from 'src/app/features/carrinho/carrinho.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,7 +12,7 @@ import { CartService } from 'src/app/features/cart/Cart.service';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
-  cart = inject(CartService);
+  cart = inject(CarrinhoService);
   auth = inject(AuthService);
 
   scrolled = signal(false);

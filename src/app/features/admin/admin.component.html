@@ -1,0 +1,415 @@
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+<div class="admin-login-page" *ngIf="!auth.isLoggedIn()">
+  <div class="card login-card">
+    <div class="login-card__icon">🔐</div>
+    <h2 class="login-card__title">Área dos Noivos</h2>
+    <p class="login-card__sub">Acesso restrito para Taís &amp; Gabriel</p>
+
+    <div class="form-group">
+      <label>Login</label>
+      <input type="text" [(ngModel)]="loginUser" (keydown.enter)="login()"
+             placeholder="noivos" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" [(ngModel)]="loginPass" (keydown.enter)="login()"
+             placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <p class="login-card__error" *ngIf="loginErr">{{ loginErr }}</p>
+
+    <button class="btn btn--primary btn--full" [disabled]="logging" (click)="login()">
+      {{ logging ? '⏳ Entrando...' : 'Entrar no Painel' }}
+    </button>
+  </div>
+</div>
+
+<!-- =====================================================
+     PAINEL (logado)
+===================================================== -->
+<ng-container *ngIf="auth.isLoggedIn()">
+
+  <div class="page-header">
+    <div class="page-header__inner">
+      <div>
+        <span class="section-eyebrow">Área restrita</span>
+        <h1 class="section-title" style="margin-bottom:0">Painel dos Noivos 🦋</h1>
+      </div>
+      <button class="btn btn--outline btn--sm" (click)="logout()">Sair</button>
+    </div>
+  </div>
+
+  <div class="admin-wrapper">
+
+    <!-- TABS -->
+    <div class="admin-tabs">
+      <button class="admin-tab" [class.active]="activeTab==='dashboard'" (click)="setTab('dashboard')">
+        <span class="admin-tab__icon">📊</span>
+        <span class="admin-tab__label">Resumo</span>
+      </button>
+      <button class="admin-tab" [class.active]="activeTab==='catalogo'" (click)="setTab('catalogo')">
+        <span class="admin-tab__icon">🎁</span>
+        <span class="admin-tab__label">Catálogo</span>
+      </button>
+      <button class="admin-tab" [class.active]="activeTab==='presentes'" (click)="setTab('presentes')">
+        <span class="admin-tab__icon">💰</span>
+        <span class="admin-tab__label">Recebidos</span>
+      </button>
+      <button class="admin-tab" [class.active]="activeTab==='presencas'" (click)="setTab('presencas')">
+        <span class="admin-tab__icon">👥</span>
+        <span class="admin-tab__label">Presenças</span>
+      </button>
+      <button class="admin-tab" [class.active]="activeTab==='mensagens'" (click)="setTab('mensagens')">
+        <span class="admin-tab__icon">💌</span>
+        <span class="admin-tab__label">Mensagens</span>
+      </button>
+      <button class="admin-tab" [class.active]="activeTab==='convites'" (click)="setTab('convites')">
+        <span class="admin-tab__icon">🎟️</span>
+        <span class="admin-tab__label">Convites</span>
+      </button>
+    </div>
+
+    <!-- ═══════════════ DASHBOARD ═══════════════ -->
+    <ng-container *ngIf="activeTab === 'dashboard'">
+
+      <div class="stats-grid">
+        <div class="stat-card stat-card--blue">
+          <span class="stat-card__icon">🎁</span>
+          <div class="stat-card__value">{{ catalogo.length }}</div>
+          <div class="stat-card__label">Itens no Catálogo</div>
+        </div>
+        <div class="stat-card stat-card--lilac">
+          <span class="stat-card__icon">🎀</span>
+          <div class="stat-card__value">{{ presentesRecebidos.length }}</div>
+          <div class="stat-card__label">Presentes Recebidos</div>
+        </div>
+        <div class="stat-card stat-card--gold">
+          <span class="stat-card__icon">💰</span>
+          <div class="stat-card__value">{{ totalArrecadado | brl }}</div>
+          <div class="stat-card__label">Total Arrecadado</div>
+        </div>
+        <div class="stat-card stat-card--green">
+          <span class="stat-card__icon">✓</span>
+          <div class="stat-card__value">{{ confirmados }}</div>
+          <div class="stat-card__label">Confirmados</div>
+        </div>
+        <div class="stat-card stat-card--soft">
+          <span class="stat-card__icon">⏳</span>
+          <div class="stat-card__value">{{ pendentes }}</div>
+          <div class="stat-card__label">Aguardando</div>
+        </div>
+        <div class="stat-card stat-card--soft">
+          <span class="stat-card__icon">💌</span>
+          <div class="stat-card__value">{{ mensagens.length }}</div>
+          <div class="stat-card__label">Mensagens</div>
+        </div>
+      </div>
+
+      <div class="section-card card" *ngIf="ultimosPresentes.length > 0">
+        <div class="section-card__header">
+          <h3 class="section-card__title">Últimos Presentes Recebidos</h3>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Quem</th>
+              <th>Itens</th>
+              <th>Total</th>
+              <th>Pagamento</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of ultimosPresentes">
+              <td>
+                <strong>{{ p.nome }}</strong><br>
+                <small style="color:var(--text-soft)">{{ p.email}}</small>
+              </td>
+              <td>
+               
+              </td>
+              <td>{{ p.total | brl }}</td>
+              <td>{{ pagamentoLabel(p.formaPagamento) }}</td>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'badge--confirm': p.statusPagamento === 'PAGO',
+                  'badge--pending': p.statusPagamento === 'PENDENTE',
+                  'badge--decline': p.statusPagamento === 'EXPIRADO'
+                }">{{ statusPagLabel(p.statusPagamento) }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="empty-card" *ngIf="presentesRecebidos.length === 0">
+        <span>🦋</span>
+        <p>Nenhum presente recebido ainda. Quando os convidados presentearem, aparecerá aqui!</p>
+      </div>
+
+    </ng-container>
+
+    <!-- ═══════════════ CATÁLOGO ═══════════════ -->
+    <ng-container *ngIf="activeTab === 'catalogo'">
+      <div class="section-card card">
+        <div class="section-card__header">
+          <h3 class="section-card__title">Catálogo de Presentes</h3>
+          <button class="btn btn--primary btn--sm" (click)="showGiftForm = !showGiftForm">
+            {{ showGiftForm ? '✕ Cancelar' : '+ Novo Item' }}
+          </button>
+        </div>
+
+        <div class="form-panel" *ngIf="showGiftForm">
+          <div class="form-panel__grid">
+            <div class="form-group">
+              <label>Nome *</label>
+              <input type="text" [(ngModel)]="giftForm.nome" placeholder="Ex: Jogo de panelas">
+            </div>
+            <div class="form-group">
+              <label>Valor (R$) *</label>
+              <input type="number" [(ngModel)]="giftForm.valor" placeholder="150.00" min="1">
+            </div>
+            <div class="form-group full">
+              <label>Descrição</label>
+              <input type="text" [(ngModel)]="giftForm.descricao" placeholder="Breve descrição">
+            </div>
+            <div class="form-group">
+              <label>Emoji</label>
+            </div>
+            <div class="form-group">
+              <label>URL da imagem</label>
+              <input type="text" [(ngModel)]="giftForm.imagemUrl" placeholder="https://...">
+            </div>
+          </div>
+          <button class="btn btn--primary" (click)="addPresente()">✨ Adicionar ao Catálogo</button>
+        </div>
+
+        <div class="catalogo-grid">
+          <div class="catalogo-item" *ngFor="let p of catalogo">
+            <div class="catalogo-item__info">
+              <strong>{{ p.nome }}</strong>
+              <span>{{ p.valor | brl }}</span>
+              <small *ngIf="p.descricao">{{ p.descricao }}</small>
+            </div>
+            <button class="btn-icon btn-icon--danger" (click)="removePresente(p.id)" title="Remover">✕</button>
+          </div>
+          <div class="empty-row-inline" *ngIf="catalogo.length === 0">
+            Nenhum item no catálogo ainda.
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ═══════════════ RECEBIDOS ═══════════════ -->
+    <ng-container *ngIf="activeTab === 'presentes'">
+      <div class="section-card card">
+        <div class="section-card__header">
+          <h3 class="section-card__title">Presentes Recebidos</h3>
+        </div>
+
+        <div class="summary-bar">
+          <div class="summary-bar__item">
+            <span class="summary-bar__label">Total arrecadado</span>
+            <span class="summary-bar__value">{{ totalArrecadado | brl }}</span>
+          </div>
+          <div class="summary-bar__item">
+            <span class="summary-bar__label">Presentes</span>
+            <span class="summary-bar__value">{{ presentesRecebidos.length }}</span>
+          </div>
+        </div>
+
+        <div class="presente-card" *ngFor="let p of presentesRecebidos">
+          <div class="presente-card__header">
+            <div class="presente-card__quem">
+              <strong>{{ p.nome }}</strong>
+              <span>{{ p.email }}</span>
+            </div>
+            <div class="presente-card__meta">
+              <span class="badge" [ngClass]="{
+                'badge--confirm': p.statusPagamento === 'PAGO',
+                'badge--pending': p.statusPagamento === 'PENDENTE',
+                'badge--decline': p.statusPagamento === 'EXPIRADO'
+              }">{{ statusPagLabel(p.statusPagamento) }}</span>
+              <span class="presente-card__forma">{{ pagamentoLabel(p.formaPagamento) }}</span>
+              <strong class="presente-card__total">{{ p.total | brl }}</strong>
+            </div>
+          </div>
+
+          <div class="presente-card__itens">
+            <span class="presente-card__item" *ngFor="let item of p.itens">
+              {{ item.nomePresente }}
+              <small>{{ item.valorPago | brl }}</small>
+            </span>
+          </div>
+
+          <div class="presente-card__msg" *ngIf="p.mensagem">
+            <span>💌</span> <em>"{{ p.mensagem }}"</em>
+          </div>
+
+          <div class="presente-card__data">
+            {{ p.criadoEm | date:'dd/MM/yyyy HH:mm' }}
+          </div>
+        </div>
+
+        <div class="empty-card" *ngIf="presentesRecebidos.length === 0">
+          <span>🎁</span>
+          <p>Nenhum presente recebido ainda.</p>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ═══════════════ PRESENÇAS ═══════════════ -->
+    <ng-container *ngIf="activeTab === 'presencas'">
+      <div class="section-card card">
+        <div class="section-card__header">
+          <h3 class="section-card__title">Lista de Presenças</h3>
+        </div>
+
+        <div class="summary-bar">
+          <div class="summary-bar__item">
+            <span class="summary-bar__label">Confirmados</span>
+            <span class="summary-bar__value" style="color:#27ae60">{{ confirmados }}</span>
+          </div>
+          <div class="summary-bar__item">
+            <span class="summary-bar__label">Talvez</span>
+            <span class="summary-bar__value" style="color:var(--gold)">{{ talvez }}</span>
+          </div>
+          <div class="summary-bar__item">
+            <span class="summary-bar__label">Não vem</span>
+            <span class="summary-bar__value" style="color:#e74c3c">{{ naoVem }}</span>
+          </div>
+          <div class="summary-bar__item">
+            <span class="summary-bar__label">Pendentes</span>
+            <span class="summary-bar__value" style="color:var(--text-soft)">{{ pendentes }}</span>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Família</th>
+              <th>Convidado</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let conv of convites">
+              <tr *ngFor="let g of conv.convidados">
+                <td><span class="code-tag">{{ conv.codigo }}</span></td>
+                <td>{{ conv.familia }}</td>
+                <td>{{ g.nome }}</td>
+                <td>
+                  <span class="badge" [ngClass]="statusClass(g.status)">
+                    {{ statusLabel(g.status) }}
+                  </span>
+                </td>
+              </tr>
+            </ng-container>
+            <tr *ngIf="convites.length === 0">
+              <td colspan="4" class="empty-row">Nenhuma resposta ainda.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+
+    <!-- ═══════════════ MENSAGENS ═══════════════ -->
+    <ng-container *ngIf="activeTab === 'mensagens'">
+      <div class="section-card card">
+        <h3 class="section-card__title">Mensagens dos Convidados 💌</h3>
+
+        <div class="messages-list" *ngIf="mensagens.length > 0">
+          <div class="message-card" *ngFor="let p of mensagens">
+            <div class="message-card__header">
+              <div>
+                <strong>{{ p.nome }}</strong>
+                <small>{{ p.email }}</small>
+              </div>
+              <span class="message-card__date">{{ p.criadoEm | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <blockquote class="message-card__text">"{{ p.mensagem }}"</blockquote>
+            <div class="message-card__itens">
+              <span *ngFor="let item of p.itens">{{ item.nomePresente }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-card" *ngIf="mensagens.length === 0">
+          <span>💌</span>
+          <p>Nenhuma mensagem recebida ainda. 🦋</p>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ═══════════════ CONVITES ═══════════════ -->
+    <ng-container *ngIf="activeTab === 'convites'">
+      <div class="section-card card">
+        <div class="section-card__header">
+          <h3 class="section-card__title">Gerenciar Convites</h3>
+          <button class="btn btn--primary btn--sm" (click)="showConviteForm = !showConviteForm">
+            {{ showConviteForm ? '✕ Cancelar' : '+ Novo Convite' }}
+          </button>
+        </div>
+
+        <div class="form-panel" *ngIf="showConviteForm">
+          <div class="form-panel__grid">
+            <div class="form-group">
+              <label>Código *</label>
+              <input type="text" [(ngModel)]="conviteForm.codigo"
+                     placeholder="TG006" maxlength="10"
+                     style="text-transform:uppercase;letter-spacing:.2em"
+                     (input)="conviteForm.codigo = conviteForm.codigo.toUpperCase()">
+            </div>
+            <div class="form-group">
+              <label>Família / Nome *</label>
+              <input type="text" [(ngModel)]="conviteForm.familia" placeholder="Família Silva">
+            </div>
+            <div class="form-group full">
+              <label>Convidados (um por linha) *</label>
+              <textarea [(ngModel)]="conviteForm.convidadosStr"
+                        placeholder="Maria Silva&#10;João Silva&#10;Ana Silva"
+                        rows="4">
+              </textarea>
+            </div>
+          </div>
+          <button class="btn btn--primary" (click)="addConvite()">🎟️ Criar Convite</button>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Família</th>
+              <th>Convidados</th>
+              <th>Confirmados</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of convites">
+              <td><span class="code-tag">{{ c.codigo }}</span></td>
+              <td>{{ c.familia }}</td>
+              <td>{{ c.convidados.length }}</td>
+              <td>
+                <span class="badge badge--confirm">
+                  {{ confirmadosCount(c) }} / {{ c.convidados.length }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-icon btn-icon--danger" (click)="removeConvite(c.id)">✕</button>
+              </td>
+            </tr>
+            <tr *ngIf="convites.length === 0">
+              <td colspan="5" class="empty-row">Nenhum convite cadastrado.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+
+  </div>
+
+</ng-container>
