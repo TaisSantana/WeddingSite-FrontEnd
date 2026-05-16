@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable, of, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ConviteAdminRequest } from '../admin/admin.model';
-import { ConviteResponse, RsvpRequest, StatusPresenca } from './convite.model';
+import { ConvidadoDTO, ConviteResponse, RsvpRequest, StatusPresenca } from './convite.model';
 
 @Injectable({ providedIn: 'root' })
 export class ConviteService {
@@ -45,8 +45,28 @@ export class ConviteService {
         naoVem: convidados.filter(g => g.status === 'NAO_VEM').length,
       };
     })
-  );
-}
+    );
+  }
+
+  atualizar(id: number, dto: ConviteAdminRequest): Observable<ConviteResponse> {
+  return this.http.patch<ConviteResponse>(`${this.api}/${id}`, dto);
+  }
+
+  criarConvidado(dto: ConvidadoDTO): Observable<ConvidadoDTO> {
+    return this.http.post<ConvidadoDTO>(
+      `${this.api}/convidados`, dto);
+  }
+
+  atualizarConvidado(id: number, dto: ConvidadoDTO): Observable<void> {
+    return this.http.patch<void>(
+      `${this.api}/convidados/${id}`, dto);
+  }
+
+  removerConvidado(convidadoId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.api}/convidados/${convidadoId}`
+    );
+  }
 
 
 

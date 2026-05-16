@@ -1,3 +1,5 @@
+import { StatusPresenca } from "../convite/convite.model";
+
 // --- Admin ---
 export interface AdminLoginRequest {
     username: string;
@@ -24,3 +26,8 @@ export interface AdminLoginRequest {
     familia: string;
     convidados: string[];
   }
+
+export interface ConvidadoEditForm {
+  nome: string;
+  status: StatusPresenca;
+}

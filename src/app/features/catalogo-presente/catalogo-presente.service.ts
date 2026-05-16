@@ -22,7 +22,7 @@ export class CatalogoPresenteService {
   }
 
   atualizar(id: number, dto: CatalogoPresenteForm): Observable<CatalogoPresente> {
-    return this.http.put<CatalogoPresente>(`${this.api}/${id}`, dto);
+    return this.http.patch<CatalogoPresente>(`${this.api}/${id}`, dto);
   }
 
   deletar(id: number): Observable<void> {

@@ -293,6 +293,7 @@
               <th>Família</th>
               <th>Convidado</th>
               <th>Status</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -306,6 +307,11 @@
                     {{ statusLabel(g.status) }}
                   </span>
                 </td>
+                  <td style="display:flex; gap:0.4rem; align-items:center;">
+                  <button class="btn-icon" (click)="editarConvidado(conv, g)" title="Editar">✏️</button>
+                  <button class="btn-icon btn-icon--danger" (click)="removerConvidado(conv.id, g.id)" title="Remover">✕</button>
+                </td>
+
               </tr>
             </ng-container>
             <tr *ngIf="convites.length === 0">
@@ -375,7 +381,9 @@
               </textarea>
             </div>
           </div>
-          <button class="btn btn--primary" (click)="addConvite()">🎟️ Criar Convite</button>
+          <button class="btn btn--primary" (click)="addConvite()">
+            {{ _editandoConviteId ? '💾 Salvar alterações' : '🎟️ Criar Convite' }}
+          </button>
         </div>
 
         <table class="data-table">

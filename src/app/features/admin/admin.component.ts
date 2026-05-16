@@ -7,7 +7,7 @@ import { BrlPipe }                 from '../../shared/pipes/brl.pipe';
 import { ToastService } from 'src/app/shared/components/toast/toast.service';
 import { PresenteRecebidoDTO } from '../presente-recebido/presente-recebido.model';
 import { PresenteRecebidoService } from '../presente-recebido/presente-recebido.service';
-import { ConviteResponse } from '../convite/convite.model';
+import { ConvidadoDTO, ConviteResponse } from '../convite/convite.model';
 import { AdminLoginRequest, ConviteAdminRequest } from './admin.model';
 import { AuthService } from './Auth.service';
 import { ConviteService } from '../convite/convite.service';
@@ -123,73 +123,6 @@ export class AdminComponent implements OnInit {
 
   setTab(tab: AdminTab): void { this.activeTab = tab; }
 
-  // ── Catálogo CRUD ─────────────────────────
-  addPresente(): void {
-    if (!this.giftForm.nome.trim() || !this.giftForm.valor) {
-      this.toastSvc.error('Preencha nome e valor!');
-      return;
-    }
-    this.catalogoSvc.criar({ ...this.giftForm }).subscribe({
-      next: p => {
-        this.catalogo     = [...this.catalogo, p];
-        this.showGiftForm = false;
-        this.giftForm     = { nome: '', descricao: '', valor: 0};
-        this.toastSvc.success('"' + p.nome + '" adicionado! 🎁');
-      },
-      error: () => this.toastSvc.error('Erro ao adicionar presente.'),
-    });
-  }
-
-  removePresente(id: number): void {
-    if (!confirm('Remover este presente do catálogo?')) return;
-    this.catalogoSvc.deletar(id).subscribe({
-      next:  () => {
-        this.catalogo = this.catalogo.filter(p => p.id !== id);
-        this.toastSvc.success('Presente removido.');
-      },
-      error: () => this.toastSvc.error('Erro ao remover.'),
-    });
-  }
-
-  // ── Convites CRUD ─────────────────────────
-  addConvite(): void {
-    if (!this.conviteForm.codigo.trim() || !this.conviteForm.familia.trim()) {
-      this.toastSvc.error('Preencha código e família!');
-      return;
-    }
-    const convidados = this.conviteForm.convidadosStr
-      .split('\n').map(s => s.trim()).filter(s => s.length > 0);
-    if (!convidados.length) {
-      this.toastSvc.error('Adicione pelo menos um convidado!');
-      return;
-    }
-    const dto: ConviteAdminRequest = {
-      codigo:     this.conviteForm.codigo.toUpperCase(),
-      familia:    this.conviteForm.familia,
-      convidados,
-    };
-    this.conviteSvc.criar(dto).subscribe({
-      next: c => {
-        this.convites        = [...this.convites, c];
-        this.showConviteForm = false;
-        this.conviteForm     = { codigo: '', familia: '', convidadosStr: '' };
-        this.toastSvc.success('Convite ' + c.codigo + ' criado!');
-      },
-      error: () => this.toastSvc.error('Erro ao criar convite.'),
-    });
-  }
-
-  removeConvite(id: number): void {
-    if (!confirm('Remover este convite?')) return;
-    this.conviteSvc.deletar(id).subscribe({
-      next:  () => {
-        this.convites = this.convites.filter(c => c.id !== id);
-        this.toastSvc.success('Convite removido.');
-      },
-      error: () => this.toastSvc.error('Erro ao remover convite.'),
-    });
-  }
-
   // ── Helpers ───────────────────────────────
   confirmadosCount(convite: ConviteResponse): number {
     return convite.convidados.filter(g => g.status === 'CONFIRMADO').length;
@@ -227,5 +160,88 @@ export class AdminComponent implements OnInit {
 
   pagamentoLabel(forma: string): string {
     return forma === 'PIX' ? '📱 Pix' : '💳 Cartão';
+  }
+
+
+   _editandoConviteId: number | null = null;
+
+  editarConvite(c: ConviteResponse): void {
+    this.conviteForm = {
+      codigo:        c.codigo,
+      familia:       c.familia,
+      convidadosStr: c.convidados.map(g => g.nome).join('\n'),
+    };
+    this._editandoConviteId = c.id;
+    this.showConviteForm    = true;
+    this.activeTab          = 'convites';
+  }
+
+  // ── Catálogo ──────────────────────────────────────────────
+addPresente(): void {
+  // ...validação...
+  this.catalogoSvc.criar({ ...this.giftForm }).subscribe({
+    next: p => {
+      this.showGiftForm = false;
+      this.giftForm     = { nome: '', descricao: '', valor: 0 };
+      this.toastSvc.success('"' + p.nome + '" adicionado! 🎁');
+      this.loadData();
+    },
+    error: () => this.toastSvc.error('Erro ao adicionar presente.'),
+  });
+}
+
+removePresente(id: number): void {
+  if (!confirm('Remover este presente do catálogo?')) return;
+  this.catalogoSvc.deletar(id).subscribe({
+    next: () => {
+      this.toastSvc.success('Presente removido.');
+      this.loadData();
+    },
+    error: () => this.toastSvc.error('Erro ao remover.'),
+  });
+}
+
+// ── Convites ──────────────────────────────────────────────
+addConvite(): void {
+  // ...validação e lógica de editar/criar...
+  // no next de ambos os branches:
+  this.toastSvc.success('Convite criado!');   // ou 'atualizado!'
+  this.loadData();
+}
+
+removeConvite(id: number): void {
+  if (!confirm('Remover este convite?')) return;
+  this.conviteSvc.deletar(id).subscribe({
+    next: () => {
+      this.toastSvc.success('Convite removido.');
+      this.loadData();
+    },
+    error: () => this.toastSvc.error('Erro ao remover convite.'),
+  });
+}
+
+// ── Convidados ────────────────────────────────────────────
+  removerConvidado(conviteId: number, convidadoId: number): void {
+    if (!confirm('Remover este convidado?')) return;
+    this.conviteSvc.removerConvidado(convidadoId).subscribe({
+      next: () => {
+        this.toastSvc.success('Convidado removido.');
+        this.loadData();
+      },
+      error: () => this.toastSvc.error('Erro ao remover convidado.'),
+    });
+  }
+
+  editarConvidado(conv: ConviteResponse, g: ConvidadoDTO): void {
+    const novoNome = prompt('Editar nome do convidado:', g.nome);
+    if (!novoNome?.trim()) return;
+
+    this.conviteSvc.atualizarConvidado(g.id, { ...g, nome: novoNome.trim() }).subscribe({
+      next: () => {
+        this.toastSvc.success('Convidado atualizado!');
+        this.loadData();
+      },
+      error: () => this.toastSvc.error('Erro ao atualizar convidado.'),
+    });
   }
 }

@@ -28,7 +28,7 @@ export const routes: Routes = [
   {
     path: 'carrinho',
     loadComponent: () =>
-      import('./features/catalogo-presente/catalogo-presente.component')
+      import('./features/carrinho/carrinho.component')
         .then(m => m.CatalogoPresenteComponent)
   },
   {

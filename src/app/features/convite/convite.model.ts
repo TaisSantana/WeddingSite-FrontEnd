@@ -1,7 +1,7 @@
 // --- Convite / RSVP ---
 export type StatusPresenca = 'PENDENTE' | 'CONFIRMADO' | 'NAO_VEM' | 'TALVEZ';
 
-export interface Convidado {
+export interface ConvidadoDTO {
   id: number;
   nome: string;
   status: StatusPresenca;
@@ -11,7 +11,7 @@ export interface ConviteResponse {
   id: number;
   codigo: string;
   familia: string;
-  convidados: Convidado[];
+  convidados: ConvidadoDTO[];
 }
 
 export interface RsvpRequest {
