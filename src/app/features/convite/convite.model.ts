@@ -5,6 +5,13 @@ export interface ConvidadoDTO {
   id: number;
   nome: string;
   status: StatusPresenca;
+  codigoConvite: string;
+}
+
+export interface ConvidadoForm {
+  nome: string;
+  status: StatusPresenca;
+  codigoConvite: string;
 }
 
 export interface ConviteResponse {
@@ -13,6 +20,7 @@ export interface ConviteResponse {
   familia: string;
   convidados: ConvidadoDTO[];
 }
+
 
 export interface RsvpRequest {
   convidadoId: number;

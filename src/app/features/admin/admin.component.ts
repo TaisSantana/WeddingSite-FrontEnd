@@ -7,7 +7,7 @@ import { BrlPipe }                 from '../../shared/pipes/brl.pipe';
 import { ToastService } from 'src/app/shared/components/toast/toast.service';
 import { PresenteRecebidoDTO } from '../presente-recebido/presente-recebido.model';
 import { PresenteRecebidoService } from '../presente-recebido/presente-recebido.service';
-import { ConvidadoDTO, ConviteResponse } from '../convite/convite.model';
+import { ConvidadoDTO, ConvidadoForm, ConviteResponse } from '../convite/convite.model';
 import { AdminLoginRequest, ConviteAdminRequest } from './admin.model';
 import { AuthService } from './Auth.service';
 import { ConviteService } from '../convite/convite.service';
@@ -47,6 +47,13 @@ export class AdminComponent implements OnInit {
   convites: ConviteResponse[] = [];
   showConviteForm = false;
   conviteForm = { codigo: '', familia: '', convidadosStr: '' };
+
+  //---Convidados------------------------------
+  showConvidadosForm = false;
+  convidadosForm: ConvidadoForm = {
+    nome: '', codigoConvite: '',
+    status: 'PENDENTE'
+  };
 
   // ── Computed ──────────────────────────────
   get totalArrecadado(): number {
@@ -232,16 +239,74 @@ removeConvite(id: number): void {
     });
   }
 
-  editarConvidado(conv: ConviteResponse, g: ConvidadoDTO): void {
-    const novoNome = prompt('Editar nome do convidado:', g.nome);
-    if (!novoNome?.trim()) return;
+  addConvidado(): void {
+    if (!this.convidadosForm.nome.trim() || !this.convidadosForm.codigoConvite) {
+      this.toastSvc.error('Preencha nome e selecione um convite.');
+      return;
+    }
 
-    this.conviteSvc.atualizarConvidado(g.id, { ...g, nome: novoNome.trim() }).subscribe({
+    const dto: ConvidadoDTO = {
+      nome:      this.convidadosForm.nome.trim(),
+      conviteId: Number(this.convidadosForm.codigoConvite),
+      status:    'PENDENTE',
+    } as any;
+
+    this.conviteSvc.criarConvidado(dto).subscribe({
       next: () => {
-        this.toastSvc.success('Convidado atualizado!');
+        this.showConvidadosForm = false;
+        this.convidadosForm = { nome: '', codigoConvite: '', status:'PENDENTE' };
+        this.toastSvc.success('Convidado adicionado!');
         this.loadData();
       },
-      error: () => this.toastSvc.error('Erro ao atualizar convidado.'),
+      error: () => this.toastSvc.error('Erro ao adicionar convidado.'),
     });
   }
+
+  // ── Editar convidado inline ───────────────────────────────
+  _editandoConvidadoId: number | null = null;
+  convidadoEditForm: ConvidadoForm = { nome: '', status: 'PENDENTE' , codigoConvite: ''};
+
+  abrirEdicaoConvidado(g: ConvidadoDTO): void {
+    this._editandoConvidadoId = g.id;
+    this.convidadoEditForm = { nome: g.nome, status: g.status, codigoConvite: g.codigoConvite };
+  }
+
+  cancelarEdicaoConvidado(): void {
+    this._editandoConvidadoId = null;
+  }
+
+  salvarConvidado(g: ConvidadoDTO): void {
+    if (!this.convidadoEditForm.nome.trim()) return;
+
+    // guarda os valores originais pra reverter se der erro
+    const original = { ...g };
+    
+    // atualiza localmente na hora
+    const conv = this.convites.find(c => c.convidados.some(x => x.id === g.id));
+    const local = conv?.convidados.find(x => x.id === g.id);
+    if (local) {
+      local.nome   = this.convidadoEditForm.nome.trim();
+      local.status = this.convidadoEditForm.status;
+    }
+    this._editandoConvidadoId = null;  // fecha edição imediatamente
+
+    this.conviteSvc.atualizarConvidado(g.id, {
+      ...g,
+      nome:          this.convidadoEditForm.nome.trim(),
+      status:        this.convidadoEditForm.status,
+      codigoConvite: this.convidadoEditForm.codigoConvite,
+    }).subscribe({
+      next: () => {
+        this.toastSvc.success('Convidado atualizado! ✓');
+      },
+      error: (err) => {
+        // reverte se der erro
+        if (local) { local.nome = original.nome; local.status = original.status; }
+        this._editandoConvidadoId = g.id;  // reabre edição
+        this.toastSvc.error('Erro ao atualizar. Tente novamente.');
+      },
+    });
+  }
+
+  
 }

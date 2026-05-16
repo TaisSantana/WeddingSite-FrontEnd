@@ -476,3 +476,26 @@
   .section-card   { padding: 1.3rem; }
   .presente-card  { padding: 1rem; }
 }
+
+.tr--editing {
+  background: var(--serenity-pale);
+  td { padding-top: 0.6rem; padding-bottom: 0.6rem; }
+}
+
+.inline-input,
+.inline-select {
+  width: 100%;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--serenity-light);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  background: white;
+  color: var(--text-dark);
+
+  &:focus {
+    outline: none;
+    border-color: var(--serenity);
+    box-shadow: 0 0 0 2px rgba(146, 168, 209, 0.25);
+  }
+}
