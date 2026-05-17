@@ -10,7 +10,7 @@ export interface ConvidadoDTO {
 
 export interface ConvidadoForm {
   nome: string;
-  status: StatusPresenca;
+  status  : StatusPresenca;
   codigoConvite: string;
 }
 

@@ -1,3 +1,5 @@
+<app-toast></app-toast>
+
 <!-- =====================================================
      LOGIN
 ===================================================== -->
@@ -42,6 +44,29 @@
   </div>
 
   <div class="admin-wrapper">
+
+     <!-- ── Modal de confirmação ── -->
+    <div class="modal-overlay" *ngIf="modalConfirm.visivel" (click)="fecharModalConfirm()">
+      <div class="modal-box" (click)="$event.stopPropagation()">
+
+        <div class="modal-box__icon">
+          <span>🗑️</span>
+        </div>
+
+        <p class="modal-box__title">{{ modalConfirm.titulo }}</p>
+        <p class="modal-box__sub">
+          Tem certeza que deseja remover<br>
+          <strong>{{ modalConfirm.nomeAlvo }}</strong>?<br>
+          <small>{{ modalConfirm.mensagem }}</small>
+        </p>
+
+        <div class="modal-box__actions">
+          <button class="btn btn--outline" (click)="fecharModalConfirm()">Cancelar</button>
+          <button class="btn btn--danger"  (click)="confirmarModal()">Sim, remover</button>
+        </div>
+
+      </div>
+    </div>
 
     <!-- TABS -->
     <div class="admin-tabs">
@@ -280,13 +305,13 @@
               <label>Convite (família) *</label>
               <select [(ngModel)]="convidadosForm.codigoConvite">
                 <option value="" disabled>Selecione um convite...</option>
-                <option *ngFor="let c of convites" [value]="c.id">
+                <option *ngFor="let c of convites" [value]="c.codigo">
                   {{ c.codigo }} — {{ c.familia }}
                 </option>
               </select>
             </div>
           </div>
-          <button class="btn btn--primary" (click)="addPresente()">✨ Adicionar Convidado</button>
+          <button class="btn btn--primary" (click)="addConvidado()">✨ Adicionar Convidado</button>
         </div>
 
         <div class="summary-bar">
@@ -340,7 +365,23 @@
 
                 <!-- linha de edição inline -->
                 <tr *ngIf="_editandoConvidadoId === g.id" class="tr--editing">
-                  <td><span class="code-tag">{{ conv.codigo }}</span></td>
+                  <td style="position: relative;">
+                    <input class="inline-input"
+                          [(ngModel)]="convidadoEditForm.codigoConvite"
+                          (input)="filtrarCodigos($event)"
+                          (blur)="fecharSugestoes()"
+                          placeholder="Buscar código...">
+                    
+                    <div class="codigo-suggestions" 
+                        *ngIf="codigoSugestoes.length > 0">
+                      <div class="codigo-suggestion-item"
+                          *ngFor="let c of codigoSugestoes"
+                          (mousedown)="selecionarCodigo(c)">
+                        <span class="code-tag">{{ c.codigo }}</span>
+                        <span>{{ c.familia }}</span>
+                      </div>
+                    </div>
+                  </td>                  
                   <td>{{ conv.familia }}</td>
                   <td>
                     <input class="inline-input" [(ngModel)]="convidadoEditForm.nome" placeholder="Nome">
@@ -354,7 +395,11 @@
                     </select>
                   </td>
                   <td style="display:flex; gap:0.4rem; align-items:center;">
-                    <button class="btn btn--primary btn--sm" (click)="salvarConvidado(g)">💾</button>
+                    <button class="btn btn--primary btn--sm"
+                            (click)="salvarEdicaoConvidado(g)"
+                            [disabled]="_salvandoConvidadoId === g.id">
+                      {{ _salvandoConvidadoId === g.id ? '⏳' : '💾' }}
+                    </button>                    
                     <button class="btn btn--outline btn--sm" (click)="cancelarEdicaoConvidado()">✕</button>
                   </td>
                 </tr>

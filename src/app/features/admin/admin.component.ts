@@ -13,6 +13,7 @@ import { AuthService } from './Auth.service';
 import { ConviteService } from '../convite/convite.service';
 import { CatalogoPresente, CatalogoPresenteForm } from '../catalogo-presente/catalogo-presente.model';
 import { CatalogoPresenteService } from '../catalogo-presente/catalogo-presente.service';
+import { ToastComponent } from "src/app/shared/components/toast/toast.component";
 
 
 type AdminTab = 'dashboard' | 'catalogo' | 'presentes' | 'presencas' | 'mensagens' | 'convites';
@@ -20,7 +21,7 @@ type AdminTab = 'dashboard' | 'catalogo' | 'presentes' | 'presencas' | 'mensagen
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, BrlPipe],
+  imports: [CommonModule, FormsModule, BrlPipe, ToastComponent],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss'],
 })
@@ -228,17 +229,7 @@ removeConvite(id: number): void {
 }
 
 // ── Convidados ────────────────────────────────────────────
-  removerConvidado(conviteId: number, convidadoId: number): void {
-    if (!confirm('Remover este convidado?')) return;
-    this.conviteSvc.removerConvidado(convidadoId).subscribe({
-      next: () => {
-        this.toastSvc.success('Convidado removido.');
-        this.loadData();
-      },
-      error: () => this.toastSvc.error('Erro ao remover convidado.'),
-    });
-  }
-
+  
   addConvidado(): void {
     if (!this.convidadosForm.nome.trim() || !this.convidadosForm.codigoConvite) {
       this.toastSvc.error('Preencha nome e selecione um convite.');
@@ -246,19 +237,23 @@ removeConvite(id: number): void {
     }
 
     const dto: ConvidadoDTO = {
-      nome:      this.convidadosForm.nome.trim(),
-      conviteId: Number(this.convidadosForm.codigoConvite),
-      status:    'PENDENTE',
-    } as any;
+      id:            0,
+      nome:          this.convidadosForm.nome.trim(),
+      codigoConvite: this.convidadosForm.codigoConvite,
+      status:        'PENDENTE',
+    };
 
     this.conviteSvc.criarConvidado(dto).subscribe({
       next: () => {
         this.showConvidadosForm = false;
-        this.convidadosForm = { nome: '', codigoConvite: '', status:'PENDENTE' };
+        this.convidadosForm = { nome: '', codigoConvite: '', status: 'PENDENTE' };
         this.toastSvc.success('Convidado adicionado!');
         this.loadData();
       },
-      error: () => this.toastSvc.error('Erro ao adicionar convidado.'),
+      error: (err) => {
+        console.error('Erro ao criar convidado:', err);
+        this.toastSvc.error('Erro ao adicionar convidado.');
+      },
     });
   }
 
@@ -275,38 +270,104 @@ removeConvite(id: number): void {
     this._editandoConvidadoId = null;
   }
 
-  salvarConvidado(g: ConvidadoDTO): void {
+  _salvandoConvidadoId: number | null = null;
+
+
+  salvarEdicaoConvidado(g: ConvidadoDTO): void {
     if (!this.convidadoEditForm.nome.trim()) return;
 
-    // guarda os valores originais pra reverter se der erro
-    const original = { ...g };
-    
-    // atualiza localmente na hora
-    const conv = this.convites.find(c => c.convidados.some(x => x.id === g.id));
-    const local = conv?.convidados.find(x => x.id === g.id);
-    if (local) {
-      local.nome   = this.convidadoEditForm.nome.trim();
-      local.status = this.convidadoEditForm.status;
-    }
-    this._editandoConvidadoId = null;  // fecha edição imediatamente
-
-    this.conviteSvc.atualizarConvidado(g.id, {
+    const dto: ConvidadoDTO = {
       ...g,
       nome:          this.convidadoEditForm.nome.trim(),
-      status:        this.convidadoEditForm.status,
+      status:        this.convidadoEditForm.status ?? g.status,
       codigoConvite: this.convidadoEditForm.codigoConvite,
-    }).subscribe({
+    };
+
+    this._salvandoConvidadoId = g.id;
+
+    this.conviteSvc.atualizarConvidado(g.id, dto).subscribe({
       next: () => {
-        this.toastSvc.success('Convidado atualizado! ✓');
+        this._salvandoConvidadoId = null;
+        this._editandoConvidadoId = null;
+        this.loadData();
+        this.toastSvc.success('Convidado atualizado!');
+
       },
-      error: (err) => {
-        // reverte se der erro
-        if (local) { local.nome = original.nome; local.status = original.status; }
-        this._editandoConvidadoId = g.id;  // reabre edição
+      error: () => {
+        this._salvandoConvidadoId = null;
         this.toastSvc.error('Erro ao atualizar. Tente novamente.');
       },
     });
   }
 
+
+  // Editar Convidado----------
+  codigoSugestoes: ConviteResponse[] = [];
+
+  filtrarCodigos(event: Event): void {
+    const termo = (event.target as HTMLInputElement).value.toUpperCase();
+    if (!termo) {
+      this.codigoSugestoes = [];
+      return;
+    }
+    this.codigoSugestoes = this.convites.filter(c =>
+      c.codigo.includes(termo) || c.familia.toUpperCase().includes(termo)
+    );
+  }
+
+  selecionarCodigo(c: ConviteResponse): void {
+    this.convidadoEditForm.codigoConvite = c.codigo;
+    this.codigoSugestoes = [];
+  }
+
+  fecharSugestoes(): void {
+    // timeout pequeno pra deixar o mousedown do item disparar antes do blur
+    setTimeout(() => this.codigoSugestoes = [], 150);
+  }
   
+
+  // ── Remover ──────────────────────────────────
+
+  removerConvidado(conviteId: number, convidadoId: number): void {
+    const conv = this.convites.find(c => c.id === conviteId);
+    const g    = conv?.convidados.find(x => x.id === convidadoId);
+
+    this.abrirModalConfirm({
+      titulo:   'Remover convidado?',
+      mensagem: 'Esta ação não pode ser desfeita.',
+      nomeAlvo: g?.nome ?? 'este convidado',
+      onConfirmar: () => {
+        this.conviteSvc.removerConvidado(convidadoId).subscribe({
+          next:  () => {  this.loadData(); this.toastSvc.success('Convidado removido.'); },
+          error: () => this.toastSvc.error('Erro ao remover convidado.'),
+        });
+      },
+    });
+  }
+
+  modalConfirm: {
+    visivel:     boolean;
+    titulo:      string;
+    mensagem:    string;
+    nomeAlvo:    string;
+    onConfirmar: () => void;
+  } = { visivel: false, titulo: '', mensagem: '', nomeAlvo: '', onConfirmar: () => {} };
+
+  abrirModalConfirm(config: {
+    titulo: string;
+    mensagem: string;
+    nomeAlvo: string;
+    onConfirmar: () => void;
+  }): void {
+    this.modalConfirm = { visivel: true, ...config };
+  }
+
+  fecharModalConfirm(): void {
+    this.modalConfirm.visivel = false;
+  }
+
+  confirmarModal(): void {
+    this.modalConfirm.onConfirmar();
+    this.fecharModalConfirm();
+  }
 }
