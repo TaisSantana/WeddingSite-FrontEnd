@@ -7,29 +7,17 @@ import { environment } from 'src/environments/environment';
 import { AdminLoginRequest, AdminLoginResponse } from './admin.model';
 
 const TOKEN_KEY = 'wedding_admin_token';
-// Demo credentials — in production use bcrypt in the backend
-const DEMO_USER = 'noivos';
-const DEMO_PASS = 'taisgabriel2026';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private http = inject(HttpClient);
+  private http   = inject(HttpClient);
   private router = inject(Router);
-  private useMock = true;
+  private useMock = false;
 
   private _loggedIn = signal<boolean>(this.hasValidToken());
   readonly isLoggedIn = this._loggedIn.asReadonly();
 
   login(req: AdminLoginRequest): Observable<AdminLoginResponse> {
-    if (this.useMock) {
-      if (req.username === DEMO_USER && req.password === DEMO_PASS) {
-        const res: AdminLoginResponse = { token: 'mock-jwt-token', expiresIn: 86400 };
-        localStorage.setItem(TOKEN_KEY, res.token);
-        this._loggedIn.set(true);
-        return of(res);
-      }
-      return throwError(() => new Error('Credenciais inválidas'));
-    }
     return this.http.post<AdminLoginResponse>(`${environment.apiUrl}/admin/login`, req).pipe(
       tap(res => {
         localStorage.setItem(TOKEN_KEY, res.token);
@@ -45,10 +33,35 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem(TOKEN_KEY);
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) return null;
+    // valida expiração antes de retornar
+    if (!this.isTokenValid(token)) {
+      localStorage.removeItem(TOKEN_KEY);
+      this._loggedIn.set(false);
+      return null;
+    }
+    return token;
   }
 
   private hasValidToken(): boolean {
-    return !!localStorage.getItem(TOKEN_KEY);
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) return false;
+    return this.isTokenValid(token);
+  }
+
+  private isTokenValid(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expMs   = payload.exp * 1000;
+      if (Date.now() >= expMs) {
+        localStorage.removeItem(TOKEN_KEY);
+        return false;
+      }
+      return true;
+    } catch {
+      localStorage.removeItem(TOKEN_KEY);
+      return false;
+    }
   }
 }

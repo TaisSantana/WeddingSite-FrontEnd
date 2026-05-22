@@ -45,29 +45,6 @@
 
   <div class="admin-wrapper">
 
-     <!-- ── Modal de confirmação ── -->
-    <div class="modal-overlay" *ngIf="modalConfirm.visivel" (click)="fecharModalConfirm()">
-      <div class="modal-box" (click)="$event.stopPropagation()">
-
-        <div class="modal-box__icon">
-          <span>🗑️</span>
-        </div>
-
-        <p class="modal-box__title">{{ modalConfirm.titulo }}</p>
-        <p class="modal-box__sub">
-          Tem certeza que deseja remover<br>
-          <strong>{{ modalConfirm.nomeAlvo }}</strong>?<br>
-          <small>{{ modalConfirm.mensagem }}</small>
-        </p>
-
-        <div class="modal-box__actions">
-          <button class="btn btn--outline" (click)="fecharModalConfirm()">Cancelar</button>
-          <button class="btn btn--danger"  (click)="confirmarModal()">Sim, remover</button>
-        </div>
-
-      </div>
-    </div>
-
     <!-- TABS -->
     <div class="admin-tabs">
       <button class="admin-tab" [class.active]="activeTab==='dashboard'" (click)="setTab('dashboard')">
@@ -286,134 +263,12 @@
     </ng-container>
 
     <!-- ═══════════════ PRESENÇAS ═══════════════ -->
-    <ng-container *ngIf="activeTab === 'presencas'">
-      <div class="section-card card">
-        <div class="section-card__header">
-          <h3 class="section-card__title">Lista de Convidados</h3>
-           <button class="btn btn--primary btn--sm" (click)="showConvidadosForm = !showConvidadosForm">
-            {{ showConvidadosForm ? '✕ Cancelar' : '+ Novo Convidado' }}
-          </button>
-        </div>
 
-        <div class="form-panel" *ngIf="showConvidadosForm">
-          <div class="form-panel__grid">
-            <div class="form-group">
-              <label>Nome *</label>
-              <input type="text" [(ngModel)]="convidadosForm.nome" >
-            </div>
-            <div class="form-group">
-              <label>Convite (família) *</label>
-              <select [(ngModel)]="convidadosForm.codigoConvite">
-                <option value="" disabled>Selecione um convite...</option>
-                <option *ngFor="let c of convites" [value]="c.codigo">
-                  {{ c.codigo }} — {{ c.familia }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <button class="btn btn--primary" (click)="addConvidado()">✨ Adicionar Convidado</button>
-        </div>
-
-        <div class="summary-bar">
-          <div class="summary-bar__item">
-            <span class="summary-bar__label">Confirmados</span>
-            <span class="summary-bar__value" style="color:#27ae60">{{ confirmados }}</span>
-          </div>
-          <div class="summary-bar__item">
-            <span class="summary-bar__label">Talvez</span>
-            <span class="summary-bar__value" style="color:var(--gold)">{{ talvez }}</span>
-          </div>
-          <div class="summary-bar__item">
-            <span class="summary-bar__label">Não vem</span>
-            <span class="summary-bar__value" style="color:#e74c3c">{{ naoVem }}</span>
-          </div>
-          <div class="summary-bar__item">
-            <span class="summary-bar__label">Pendentes</span>
-            <span class="summary-bar__value" style="color:var(--text-soft)">{{ pendentes }}</span>
-          </div>
-        </div>
-
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Código</th>
-              <th>Família</th>
-              <th>Convidado</th>
-              <th>Status</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ng-container *ngFor="let conv of convites">
-              <ng-container *ngFor="let g of conv.convidados">
-
-                <!-- linha normal -->
-                <tr *ngIf="_editandoConvidadoId !== g.id">
-                  <td><span class="code-tag">{{ conv.codigo }}</span></td>
-                  <td>{{ conv.familia }}</td>
-                  <td>{{ g.nome }}</td>
-                  <td>
-                    <span class="badge" [ngClass]="statusClass(g.status)">
-                      {{ statusLabel(g.status) }}
-                    </span>
-                  </td>
-                  <td style="display:flex; gap:0.4rem; align-items:center;">
-                    <button class="btn-icon" (click)="abrirEdicaoConvidado(g)" title="Editar">✏️</button>
-                    <button class="btn-icon btn-icon--danger" (click)="removerConvidado(conv.id, g.id)" title="Remover">✕</button>
-                  </td>
-                </tr>
-
-                <!-- linha de edição inline -->
-                <tr *ngIf="_editandoConvidadoId === g.id" class="tr--editing">
-                  <td style="position: relative;">
-                    <input class="inline-input"
-                          [(ngModel)]="convidadoEditForm.codigoConvite"
-                          (input)="filtrarCodigos($event)"
-                          (blur)="fecharSugestoes()"
-                          placeholder="Buscar código...">
-                    
-                    <div class="codigo-suggestions" 
-                        *ngIf="codigoSugestoes.length > 0">
-                      <div class="codigo-suggestion-item"
-                          *ngFor="let c of codigoSugestoes"
-                          (mousedown)="selecionarCodigo(c)">
-                        <span class="code-tag">{{ c.codigo }}</span>
-                        <span>{{ c.familia }}</span>
-                      </div>
-                    </div>
-                  </td>                  
-                  <td>{{ conv.familia }}</td>
-                  <td>
-                    <input class="inline-input" [(ngModel)]="convidadoEditForm.nome" placeholder="Nome">
-                  </td>
-                  <td>
-                    <select class="inline-select" [(ngModel)]="convidadoEditForm.status">
-                      <option value="CONFIRMADO">✓ Confirmado</option>
-                      <option value="TALVEZ">? Talvez</option>
-                      <option value="NAO_VEM">✗ Não vem</option>
-                      <option value="PENDENTE">⏳ Pendente</option>
-                    </select>
-                  </td>
-                  <td style="display:flex; gap:0.4rem; align-items:center;">
-                    <button class="btn btn--primary btn--sm"
-                            (click)="salvarEdicaoConvidado(g)"
-                            [disabled]="_salvandoConvidadoId === g.id">
-                      {{ _salvandoConvidadoId === g.id ? '⏳' : '💾' }}
-                    </button>                    
-                    <button class="btn btn--outline btn--sm" (click)="cancelarEdicaoConvidado()">✕</button>
-                  </td>
-                </tr>
-
-              </ng-container>
-            </ng-container>
-
-            <tr *ngIf="convites.length === 0">
-              <td colspan="5" class="empty-row">Nenhuma resposta ainda.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </ng-container>
+    <app-admin-convidados-tab
+      *ngIf="activeTab === 'presencas'"
+      [convites]="convites"
+      (reload)="loadData()">
+    </app-admin-convidados-tab>
 
     <!-- ═══════════════ MENSAGENS ═══════════════ -->
     <ng-container *ngIf="activeTab === 'mensagens'">
@@ -443,73 +298,11 @@
       </div>
     </ng-container>
 
-    <!-- ═══════════════ CONVITES ═══════════════ -->
-    <ng-container *ngIf="activeTab === 'convites'">
-      <div class="section-card card">
-        <div class="section-card__header">
-          <h3 class="section-card__title">Gerenciar Convites</h3>
-          <button class="btn btn--primary btn--sm" (click)="showConviteForm = !showConviteForm">
-            {{ showConviteForm ? '✕ Cancelar' : '+ Novo Convite' }}
-          </button>
-        </div>
-
-        <div class="form-panel" *ngIf="showConviteForm">
-          <div class="form-panel__grid">
-            <div class="form-group">
-              <label>Código *</label>
-              <input type="text" [(ngModel)]="conviteForm.codigo"
-                     placeholder="TG006" maxlength="10"
-                     style="text-transform:uppercase;letter-spacing:.2em"
-                     (input)="conviteForm.codigo = conviteForm.codigo.toUpperCase()">
-            </div>
-            <div class="form-group">
-              <label>Família / Nome *</label>
-              <input type="text" [(ngModel)]="conviteForm.familia" placeholder="Família Silva">
-            </div>
-            <div class="form-group full">
-              <label>Convidados (um por linha) *</label>
-              <textarea [(ngModel)]="conviteForm.convidadosStr"
-                        placeholder="Maria Silva&#10;João Silva&#10;Ana Silva"
-                        rows="4">
-              </textarea>
-            </div>
-          </div>
-          <button class="btn btn--primary" (click)="addConvite()">
-            {{ _editandoConviteId ? '💾 Salvar alterações' : '🎟️ Criar Convite' }}
-          </button>
-        </div>
-
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Código</th>
-              <th>Família</th>
-              <th>Convidados</th>
-              <th>Confirmados</th>
-              <th>Ação</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let c of convites">
-              <td><span class="code-tag">{{ c.codigo }}</span></td>
-              <td>{{ c.familia }}</td>
-              <td>{{ c.convidados.length }}</td>
-              <td>
-                <span class="badge badge--confirm">
-                  {{ confirmadosCount(c) }} / {{ c.convidados.length }}
-                </span>
-              </td>
-              <td>
-                <button class="btn-icon btn-icon--danger" (click)="removeConvite(c.id)">✕</button>
-              </td>
-            </tr>
-            <tr *ngIf="convites.length === 0">
-              <td colspan="5" class="empty-row">Nenhum convite cadastrado.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </ng-container>
+    <app-admin-convites-tab
+      *ngIf="activeTab === 'convites'"
+      [convites]="convites"
+      (reload)="loadData()">
+    </app-admin-convites-tab>
 
   </div>
 

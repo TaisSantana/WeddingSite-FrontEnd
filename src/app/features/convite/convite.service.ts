@@ -18,11 +18,11 @@ export class ConviteService {
      return this.http.post<void>(`${this.api}/${codigo.toUpperCase()}/confirmar`, rsvps);
   }
 
-  criar(dto: ConviteAdminRequest): Observable<ConviteResponse> {
+  criarConvite(dto: ConviteAdminRequest): Observable<ConviteResponse> {
     return this.http.post<ConviteResponse>(this.api, dto);
   }
 
-  deletar(id: number): Observable<void> {
+  deletarConvite(id: string): Observable<void> {
     return this.http.delete<void>(`${this.api}/${id}`);
   }
 
@@ -48,7 +48,7 @@ export class ConviteService {
     );
   }
 
-  atualizar(id: number, dto: ConviteAdminRequest): Observable<ConviteResponse> {
+  atualizar(id: string, dto: ConviteAdminRequest): Observable<ConviteResponse> {
   return this.http.patch<ConviteResponse>(`${this.api}/${id}`, dto);
   }
 

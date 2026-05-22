@@ -24,7 +24,7 @@ export interface AdminLoginRequest {
   export interface ConviteAdminRequest {
     codigo: string;
     familia: string;
-    convidados: string[];
+    convidados?: string[];
   }
 
 export interface ConvidadoEditForm {
