@@ -21,7 +21,7 @@ import { Component } from '@angular/core';
           </div>
           <div class="detail">
             <span>🕓</span>
-            <p>Cerimônia: <strong>19 de Setembro de 2026 às 16h</strong></p>
+            <p>Cerimônia: <strong>19 de Setembro de 2026 às 15h</strong></p>
           </div>
           <div class="detail">
             <span>🚗</span>
@@ -29,7 +29,7 @@ import { Component } from '@angular/core';
           </div>
           <div class="detail">
             <span>🚌</span>
-            <p>Caso precise de carona, entre em contato com os noivos pelo WhatsApp</p>
+            <p>Existe Ônibus Recife/Feira Nova da Expresso 1002</p>
           </div>
         </div>
 
@@ -123,7 +123,7 @@ import { Component } from '@angular/core';
         border-bottom: 2px solid var(--serenity-pale);
       }
 
-      &--info { background: linear-gradient(135deg, var(--serenity-pale), var(--lilac-pale)); }
+      &--info { background: linear-gradient(135deg, var(--serenity-pale), var(--serenity-pale)); }
     }
 
     .detail {

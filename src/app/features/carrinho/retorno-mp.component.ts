@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule }      from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { PresenteRecebidoService } from '../presente-recebido/presente-recebido.service';
-import { PaymentService } from '../payment/Payment.service';
+import { PaymentService } from '../payment/payment.service';
 import { CatalogoPresenteService } from '../catalogo-presente/catalogo-presente.service';
 import { CarrinhoService } from './carrinho.service';
 

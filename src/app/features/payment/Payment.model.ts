@@ -1,15 +1,14 @@
 import { CatalogoPresente } from "../catalogo-presente/catalogo-presente.model";
 
-
 // --- Presente ---
 export type FormaPagamento = 'PIX' | 'CARTAO';
 
 export interface PaymentRequest {
   nome: string;
-  email: string
+  email: string;
   mensagem?: string;
   formaPagamento: FormaPagamento;
-  itens: { presenteId: number }[];
+  itens: { catalogoId: number }[];
 }
 
 export interface PaymentResponse {
@@ -22,33 +21,31 @@ export interface PaymentResponse {
   itens: { presente: CatalogoPresente; valorPago: number }[];
 }
 
-
 // --- Pagamento Mercado Pago ---
 export interface ItemPagamentoDTO {
-  presenteId: number;
+  catalogoId: number;
 }
 
 // PIX
 export interface IniciarPixRequestDTO {
-  nome:  string;
-  email: string;
-  mensagem?:   string;
-  itens:       ItemPagamentoDTO[];
+  nome:     string;
+  email:    string;
+  mensagem?: string;
+  itens:    ItemPagamentoDTO[];
 }
 
 export interface PixDataDTO {
-  paymentId:    string;
-  valor:        number;
-  copiaECola:   string;
-  qrCodeBase64: string;
-  expiresAt:    string;
-  status:       string;
+  presenteRecebidoId: number;
+  mpPaymentId:        string;
+  valor:              number;
+  copiaECola:         string;
+  qrCodeBase64:       string;
+  expiresAt:          string;
+  status:             string;
 }
 
-export interface IniciarPixResponseDTO {
-  contribuicaoId: number;
-  pix: PixDataDTO;
-}
+// ← sem wrapper, a resposta do backend É o PixDataDTO direto
+export type IniciarPixResponseDTO = PixDataDTO;
 
 export interface StatusPixDTO {
   paymentId: string;
@@ -58,15 +55,15 @@ export interface StatusPixDTO {
 
 // CARTÃO — Checkout Pro
 export interface CheckoutProRequestDTO {
-  nome:  string;
-  email: string;
-  mensagem?:   string;
-  itens:       ItemPagamentoDTO[];
+  nome:     string;
+  email:    string;
+  mensagem?: string;
+  itens:    ItemPagamentoDTO[];
 }
 
 export interface CheckoutProResponseDTO {
   contribuicaoId: number;
   preferenceId:   string;
-  checkoutUrl:    string;   // produção
-  sandboxUrl:     string;   // testes
+  checkoutUrl:    string;
+  sandboxUrl:     string;
 }

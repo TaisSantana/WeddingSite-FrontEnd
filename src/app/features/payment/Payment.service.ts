@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, interval, of, switchMap, takeWhile } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CheckoutProRequestDTO, CheckoutProResponseDTO, IniciarPixRequestDTO, IniciarPixResponseDTO, StatusPixDTO, PaymentRequest, PaymentResponse } from './Payment.model';
+import { CheckoutProRequestDTO, CheckoutProResponseDTO, IniciarPixRequestDTO, IniciarPixResponseDTO, StatusPixDTO, PaymentRequest, PaymentResponse } from './payment.model';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {

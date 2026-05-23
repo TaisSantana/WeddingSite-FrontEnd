@@ -6,11 +6,10 @@ import { Subscription }   from 'rxjs';
 
 import { BrlPipe }             from '../../shared/pipes/brl.pipe';
 import { ToastService } from 'src/app/shared/components/toast/toast.service';
-import { PixDataDTO, StatusPixDTO } from '../payment/Payment.model';
-import { PaymentService } from '../payment/Payment.service';
 import { CarrinhoService } from './carrinho.service';
 import { PresenteRecebidoService } from '../presente-recebido/presente-recebido.service';
-import { PaymentResponse, PaymentRequest} from '../payment/Payment.model';
+import { PaymentResponse, PaymentRequest, PixDataDTO, StatusPixDTO} from '../payment/payment.model';
+import { PaymentService } from '../payment/payment.service';
 
 
 type Etapa =
@@ -126,13 +125,13 @@ export class CatalogoPresenteComponent implements OnInit, OnDestroy {
       nome:  this.nome.trim(),
       email: this.email.trim(),
       mensagem:    this.mensagem.trim() || undefined,
-      itens:       this.cart.items().map(i => ({ presenteId: i.presente.id })),
+      itens:       this.cart.items().map(i => ({ catalogoId: i.presente.id })),
     }).subscribe({
       next: (res) => {
-        this.pixData = res.pix;
+        this.pixData = res;                        // res já É o PixDataDTO
         this.etapa   = 'PIX_AGUARDANDO';
         this.iniciarTickerPix();
-        this.iniciarPollingPix(res.pix.paymentId);
+        this.iniciarPollingPix(res.mpPaymentId);   // era res.pix.paymentId
       },
       error: () => {
         this.etapa = 'FORMULARIO';
@@ -187,7 +186,7 @@ export class CatalogoPresenteComponent implements OnInit, OnDestroy {
       nome:  this.nome.trim(),
       email: this.email.trim(),
       mensagem:    this.mensagem.trim() || undefined,
-      itens:       this.cart.items().map(i => ({ presenteId: i.presente.id })),
+      itens:       this.cart.items().map(i => ({ catalogoId: i.presente.id })),
     }).subscribe({
       next: (res) => {
         // Redireciona para o ambiente seguro do Mercado Pago
@@ -211,7 +210,7 @@ export class CatalogoPresenteComponent implements OnInit, OnDestroy {
       email:    this.email.trim(),
       mensagem:       this.mensagem.trim() || undefined,
       formaPagamento: forma as any,
-      itens:          this.cart.items().map(i => ({ presenteId: i.presente.id })),
+      itens:          this.cart.items().map(i => ({ catalogoId: i.presente.id })),
     }).subscribe();
     this.cart.clear();
     this.etapa = 'SUCESSO';
