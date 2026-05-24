@@ -9,7 +9,7 @@ import { PresenteRecebidoDTO } from '../presente-recebido/presente-recebido.mode
 import { PresenteRecebidoService } from '../presente-recebido/presente-recebido.service';
 import { ConvidadoDTO, ConvidadoForm, ConviteResponse } from '../convite/convite.model';
 import { AdminLoginRequest, ConviteAdminRequest } from './admin.model';
-import { AuthService } from './Auth.service';
+import { AuthService } from './auth.service';
 import { ConviteService } from '../convite/convite.service';
 import { CatalogoPresente, CatalogoPresenteForm } from '../catalogo-presente/catalogo-presente.model';
 import { CatalogoPresenteService } from '../catalogo-presente/catalogo-presente.service';
