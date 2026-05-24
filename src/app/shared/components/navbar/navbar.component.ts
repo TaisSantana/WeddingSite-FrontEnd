@@ -1,7 +1,7 @@
 import { Component, inject, HostListener, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIf } from '@angular/common';
-import { AuthService } from 'src/app/features/admin/Auth.service';
+import { AuthService } from 'src/app/features/admin/auth.service';
 import { CarrinhoService } from 'src/app/features/carrinho/carrinho.service';
 
 @Component({
