@@ -8,21 +8,25 @@
 // CSS CUSTOM PROPERTIES
 // ============================================================
 :root {
-  --serenity:        #92A8D1;
-  --serenity-light:  #B8CCE8;
-  --serenity-pale:   #DCE8F5;
-  --serenity-dark:   #5E7FA8;
-  --lilac:           #C9A9D4;
-  --lilac-light:     #E2C8EC;
-  --lilac-pale:      #F3EAF7;
-  --lilac-dark:      #9A6EB0;
-  --cream:           #FAF7F2;
-  --warm-white:      #FDFBF8;
-  --text-dark:       #2C2035;
-  --text-mid:        #5A4E6A;
-  --text-soft:       #8A7A9A;
-  --gold:            #C8A96E;
-  --gold-light:      #E8D0A0;
+--serenity:        #92A8D1;   // mantém
+--serenity-light:  #B8CCE8;   // mantém
+--serenity-pale:   #DCE8F5;   // mantém
+--serenity-dark:   #5E7FA8;   // mantém
+
+--lilac:           #4A6FA5;   // azul médio
+--lilac-light:     #7A9CC8;   // azul claro
+--lilac-pale:      #E8F0FA;   // azul bem pálido
+--lilac-dark:      #1E3A5F;   // azul marinho escuro (cor da logo)
+
+--cream:           #F5F8FC;   // cream com toque azulado
+--warm-white:      #F8FAFD;   // branco azulado suave
+
+--text-dark:       #1E3A5F;   // azul marinho (mesma cor da logo)
+--text-mid:        #3D5A80;   // azul médio
+--text-soft:       #7A96B8;   // azul acinzentado
+
+--gold:            #C8A96E;   // mantém
+--gold-light:      #E8D0A0;   // mantém
 
   --font-display: 'Cinzel Decorative', serif;
   --font-serif:   'Cormorant Garamond', serif;
@@ -110,12 +114,12 @@ img { max-width: 100%; display: block; }
   cursor: pointer;
 
   &--primary {
-    background: linear-gradient(135deg, var(--serenity-dark), var(--lilac-dark));
+    background: linear-gradient(135deg, #3D5A80, #5E7FA8);
     color: white;
-    box-shadow: 0 4px 20px rgba(92,127,168,0.3);
+    box-shadow: 0 4px 20px rgba(62, 90, 128, 0.3);
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(92,127,168,0.4);
+      box-shadow: 0 8px 30px rgba(62, 90, 128, 0.4);
     }
     &:active { transform: translateY(0); }
     &:disabled {

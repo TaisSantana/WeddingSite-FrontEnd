@@ -1,54 +1,131 @@
 <nav class="navbar" [class.navbar--scrolled]="scrolled()">
   <div class="navbar__inner">
 
+    <!-- LOGO -->
     <a routerLink="/" class="navbar__logo" (click)="closeMenu()">
-      <span class="navbar__logo-icon">🦋</span>
+      <img src="assets/images/logo.png" alt="T & G" class="navbar__logo-img">
       <span class="navbar__logo-text">T &amp; G</span>
     </a>
 
-    <!-- Desktop -->
+    <!-- DESKTOP -->
     <ul class="navbar__links">
+
+      <!-- INÍCIO -->
       <li>
-        <a routerLink="/" routerLinkActive="active" (click)="closeMenu()">
-          <span class="nav-icon">🏠</span> Início
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">
+
+          <svg class="nav-svg" viewBox="0 0 64 64" fill="none">
+            <path d="M10 54V24L18 16L24 24L32 14L40 24L46 16L54 24V54Z"/>
+            <path d="M24 54V40H40V54"/>
+            <path d="M18 16V8H24V16"/>
+            <path d="M40 16V8H46V16"/>
+            <path d="M6 54H58"/>
+          </svg>
+
+          Início
         </a>
       </li>
 
+      <!-- LOCAL -->
       <li>
         <a routerLink="/local" routerLinkActive="active" (click)="closeMenu()">
-          <span class="nav-icon">📍</span> Local
+
+          <svg class="nav-svg" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="22"/>
+            <path d="M32 10L36 28L54 32L36 36L32 54L28 36L10 32L28 28Z"/>
+            <circle cx="32" cy="32" r="4"/>
+          </svg>
+
+          Local
         </a>
       </li>
 
+      <!-- PRESENTES -->
       <li>
         <a routerLink="/presentes" routerLinkActive="active" (click)="closeMenu()">
-          <span class="nav-icon">🎁</span> Presentes
+
+          <svg class="nav-svg" viewBox="0 0 64 64" fill="none">
+            <path d="M10 24H54V50H10Z"/>
+            <path d="M6 18H58V24H6Z"/>
+            <path d="M32 18V50"/>
+            <path d="M22 18C18 14 18 8 24 8C30 8 32 18 32 18"/>
+            <path d="M42 18C46 14 46 8 40 8C34 8 32 18 32 18"/>
+          </svg>
+
+          Presentes
         </a>
       </li>
 
+      <!-- CARRINHO -->
       <li>
-        <a routerLink="/carrinho" routerLinkActive="active" class="cart-link" (click)="closeMenu()">
-          <span class="nav-icon">🛒</span> Carrinho
+        <a
+          routerLink="/carrinho"
+          routerLinkActive="active"
+          class="cart-link"
+          (click)="closeMenu()">
+
+          <svg class="nav-svg" viewBox="0 0 64 64" fill="none">
+            <path d="M16 22H48L44 52H20Z"/>
+            <path d="M24 22C24 12 40 12 40 22"/>
+            <path d="M24 32H40"/>
+            <circle cx="24" cy="40" r="2"/>
+            <circle cx="40" cy="40" r="2"/>
+          </svg>
+
+          Carrinho
+
           <span *ngIf="cart.count() > 0" class="cart-badge">
             {{ cart.count() }}
           </span>
         </a>
       </li>
 
+      <!-- PRESENÇA -->
       <li>
         <a routerLink="/presenca" routerLinkActive="active" (click)="closeMenu()">
-          <span class="nav-icon">💌</span> Presença
+
+          <svg class="nav-svg" viewBox="0 0 64 64" fill="none">
+            <path d="M8 16H56V48H8Z"/>
+            <path d="M8 16L32 34L56 16"/>
+            <path d="M24 40C24 34 32 34 32 40C32 34 40 34 40 40
+                     C40 46 32 50 32 50C32 50 24 46 24 40Z"/>
+          </svg>
+
+          Presença
         </a>
       </li>
 
+      <!-- ADMIN -->
       <li>
-        <a routerLink="/admin" routerLinkActive="active" (click)="closeMenu()">
-          <span class="nav-icon">🔐</span> Admin
+         <a routerLink="/admin" routerLinkActive="active" (click)="closeMenu()">
+
+          <svg class="nav-svg" viewBox="0 0 64 64" fill="none">
+
+            <!-- aro ornamental -->
+            <circle cx="24" cy="32" r="10"/>
+
+            <!-- miolo -->
+            <circle cx="24" cy="32" r="3"/>
+
+            <!-- haste -->
+            <path d="M34 32H52"/>
+
+            <!-- ornamentos -->
+            <path d="M46 32V26"/>
+            <path d="M52 32V22"/>
+
+            <!-- detalhe medieval -->
+            <path d="M18 26L30 38"/>
+
+          </svg>
+
+          Admin
         </a>
       </li>
+
     </ul>
 
-    <!-- Mobile button -->
+    <!-- HAMBURGER -->
     <button
       class="navbar__hamburger"
       (click)="toggleMenu()"
@@ -57,29 +134,77 @@
       <span></span>
       <span></span>
       <span></span>
+
     </button>
 
   </div>
 
-  <!-- Mobile menu -->
+ <!-- MOBILE -->
   <div class="navbar__mobile" [class.open]="menuOpen()">
 
-    <a routerLink="/" (click)="closeMenu()">🏠 Início</a>
-
-    <a routerLink="/local" (click)="closeMenu()">📍 Local</a>
-
-    <a routerLink="/presentes" (click)="closeMenu()">🎁 Presentes</a>
-
-    <a routerLink="/carrinho" (click)="closeMenu()">
-      🛒 Carrinho
-      <span *ngIf="cart.count() > 0" class="cart-badge">
-        {{ cart.count() }}
-      </span>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">
+      <svg class="nav-svg" viewBox="0 0 64 64" fill="none">
+        <path d="M10 54V24L18 16L24 24L32 14L40 24L46 16L54 24V54Z"/>
+        <path d="M24 54V40H40V54"/>
+        <path d="M18 16V8H24V16"/>
+        <path d="M40 16V8H46V16"/>
+        <path d="M6 54H58"/>
+      </svg>
+      Início
     </a>
 
-    <a routerLink="/presenca" (click)="closeMenu()">💌 Presença</a>
+    <a routerLink="/local" routerLinkActive="active" (click)="closeMenu()">
+      <svg class="nav-svg" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="22"/>
+        <path d="M32 10L36 28L54 32L36 36L32 54L28 36L10 32L28 28Z"/>
+        <circle cx="32" cy="32" r="4"/>
+      </svg>
+      Local
+    </a>
 
-    <a routerLink="/admin" (click)="closeMenu()">🔐 Admin</a>
+    <a routerLink="/presentes" routerLinkActive="active" (click)="closeMenu()">
+      <svg class="nav-svg" viewBox="0 0 64 64" fill="none">
+        <path d="M10 24H54V50H10Z"/>
+        <path d="M6 18H58V24H6Z"/>
+        <path d="M32 18V50"/>
+        <path d="M22 18C18 14 18 8 24 8C30 8 32 18 32 18"/>
+        <path d="M42 18C46 14 46 8 40 8C34 8 32 18 32 18"/>
+      </svg>
+      Presentes
+    </a>
+
+    <a routerLink="/carrinho" routerLinkActive="active" class="cart-link" (click)="closeMenu()">
+      <svg class="nav-svg" viewBox="0 0 64 64" fill="none">
+        <path d="M16 22H48L44 52H20Z"/>
+        <path d="M24 22C24 12 40 12 40 22"/>
+        <path d="M24 32H40"/>
+        <circle cx="24" cy="40" r="2"/>
+        <circle cx="40" cy="40" r="2"/>
+      </svg>
+      Carrinho
+      <span *ngIf="cart.count() > 0" class="cart-badge">{{ cart.count() }}</span>
+    </a>
+
+    <a routerLink="/presenca" routerLinkActive="active" (click)="closeMenu()">
+      <svg class="nav-svg" viewBox="0 0 64 64" fill="none">
+        <path d="M8 16H56V48H8Z"/>
+        <path d="M8 16L32 34L56 16"/>
+        <path d="M24 40C24 34 32 34 32 40C32 34 40 34 40 40
+                C40 46 32 50 32 50C32 50 24 46 24 40Z"/>
+      </svg>
+      Presença
+    </a>
+
+     <a routerLink="/admin" routerLinkActive="active" (click)="closeMenu()">
+
+      <svg class="nav-svg" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="20" r="10"/>
+        <path d="M14 54C14 43 50 43 50 54"/>
+        <path d="M40 36L44 40L54 30"/>
+      </svg>
+
+      Admin
+    </a>
 
   </div>
 </nav>
