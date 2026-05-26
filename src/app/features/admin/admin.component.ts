@@ -16,6 +16,7 @@ import { CatalogoPresenteService } from '../catalogo-presente/catalogo-presente.
 import { ToastComponent } from "src/app/shared/components/toast/toast.component";
 import { AdminConvidadosTabComponent } from './components/convidados-tab/admin-convidados-tab.component';
 import { AdminConvitesTabComponent } from "./components/convites-tab/admin-convites-tab.component";
+import { AdminCatalogoTabComponent } from "./components/catalogo-tab/admin-catalogo-tab.component";
 
 
 type AdminTab = 'dashboard' | 'catalogo' | 'presentes' | 'presencas' | 'mensagens' | 'convites';
@@ -23,7 +24,7 @@ type AdminTab = 'dashboard' | 'catalogo' | 'presentes' | 'presencas' | 'mensagen
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, BrlPipe, ToastComponent, AdminConvidadosTabComponent, AdminConvitesTabComponent],
+  imports: [CommonModule, FormsModule, BrlPipe, ToastComponent, AdminConvidadosTabComponent, AdminConvitesTabComponent, AdminCatalogoTabComponent],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss'],
 })
@@ -40,8 +41,6 @@ export class AdminComponent implements OnInit {
 
   // ── Catálogo ──────────────────────────────
   catalogo: CatalogoPresente[] = [];
-  showGiftForm = false;
-  giftForm: CatalogoPresenteForm = { nome: '', descricao: '', valor: 0};
 
   // ── Presentes recebidos ───────────────────
   presentesRecebidos: PresenteRecebidoDTO[] = [];
@@ -130,32 +129,5 @@ export class AdminComponent implements OnInit {
     return forma === 'PIX' ? '📱 Pix' : '💳 Cartão';
   }
 
-
-   
-
-  // ── Catálogo ──────────────────────────────────────────────
-addPresente(): void {
-  // ...validação...
-  this.catalogoSvc.criar({ ...this.giftForm }).subscribe({
-    next: p => {
-      this.showGiftForm = false;
-      this.giftForm     = { nome: '', descricao: '', valor: 0 };
-      this.toastSvc.success('"' + p.nome + '" adicionado! 🎁');
-      this.loadData();
-    },
-    error: () => this.toastSvc.error('Erro ao adicionar presente.'),
-  });
-}
-
-removePresente(id: number): void {
-  if (!confirm('Remover este presente do catálogo?')) return;
-  this.catalogoSvc.deletar(id).subscribe({
-    next: () => {
-      this.toastSvc.success('Presente removido.');
-      this.loadData();
-    },
-    error: () => this.toastSvc.error('Erro ao remover.'),
-  });
-}
 
 }

@@ -33,8 +33,7 @@ export class CatalogoPresenteComponent implements OnInit {
     return this.presentes()
       .filter(p =>
         p.nome.toLowerCase().includes(termo) ||
-        p.descricao.toLowerCase().includes(termo)
-      );
+        (p.descricao || '').toLowerCase().includes(termo));
   });
 
 

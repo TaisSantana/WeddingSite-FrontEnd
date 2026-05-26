@@ -2,7 +2,7 @@
 export interface CatalogoPresente {
   id: number;
   nome: string;
-  descricao: string;
+  descricao?: string;
   valor: number;
   imagemUrl?: string;
   criadoEm?: string;
@@ -11,7 +11,7 @@ export interface CatalogoPresente {
 // Form para criar/editar no admin
 export interface CatalogoPresenteForm {
   nome: string;
-  descricao: string;
+  descricao?: string;
   valor: number;
   imagemUrl?: string;
 }

@@ -1,0 +1,49 @@
+<app-confirm-modal #confirmModal></app-confirm-modal>
+
+<div class="section-card card">
+    <div class="section-card__header">
+        <h3 class="section-card__title">Catálogo de Presentes</h3>
+        <button class="btn btn--primary btn--sm" (click)="showGiftForm = !showGiftForm">
+        {{ showGiftForm ? '✕ Cancelar' : '+ Novo Item' }}
+        </button>
+    </div>
+
+    <div class="form-panel" *ngIf="showGiftForm">
+        <div class="form-panel__grid">
+            <div class="form-group">
+                <label>Nome *</label>
+                <input type="text" [(ngModel)]="catalogoForm.nome" placeholder="Ex: Jogo de panelas">
+            </div>
+            <div class="form-group">
+                <label>Valor (R$) *</label>
+                <input type="number" [(ngModel)]="catalogoForm.valor" placeholder="150.00" min="1">
+            </div>
+            <div class="form-group full">
+                <label>Descrição</label>
+                <input type="text" [(ngModel)]="catalogoForm.descricao" placeholder="Breve descrição">
+            </div>
+            <div class="form-group">
+                <label>URL da imagem</label>
+                <input type="text" [(ngModel)]="catalogoForm.imagemUrl" placeholder="https://...">
+            </div>
+        </div>
+        <button class="btn btn--primary" (click)="addPresente()">✨ Adicionar ao Catálogo</button>
+    </div>
+
+    <div class="catalogo-grid">
+        <div class="catalogo-item" *ngFor="let p of catalogo">
+            <div class="catalogo-item__info">
+                <strong>{{ p.nome }}</strong>
+                <span>{{ p.valor | brl }}</span>
+                <small *ngIf="p.descricao">{{ p.descricao }}</small>
+                <small *ngIf="p.imagemUrl">{{ p.imagemUrl }}</small>
+            </div>
+            <button class="btn-icon btn-icon--danger" (click)="removePresente(p.id)" title="Remover">✕</button>
+        </div>
+        <div class="empty-row-inline" *ngIf="catalogo.length === 0">
+            Nenhum item no catálogo ainda.
+        </div>
+    </div>
+    
+</div>
+

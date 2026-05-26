@@ -153,113 +153,69 @@
 
     </ng-container>
 
-    <!-- ═══════════════ CATÁLOGO ═══════════════ -->
-    <ng-container *ngIf="activeTab === 'catalogo'">
-      <div class="section-card card">
-        <div class="section-card__header">
-          <h3 class="section-card__title">Catálogo de Presentes</h3>
-          <button class="btn btn--primary btn--sm" (click)="showGiftForm = !showGiftForm">
-            {{ showGiftForm ? '✕ Cancelar' : '+ Novo Item' }}
-          </button>
-        </div>
-
-        <div class="form-panel" *ngIf="showGiftForm">
-          <div class="form-panel__grid">
-            <div class="form-group">
-              <label>Nome *</label>
-              <input type="text" [(ngModel)]="giftForm.nome" placeholder="Ex: Jogo de panelas">
-            </div>
-            <div class="form-group">
-              <label>Valor (R$) *</label>
-              <input type="number" [(ngModel)]="giftForm.valor" placeholder="150.00" min="1">
-            </div>
-            <div class="form-group full">
-              <label>Descrição</label>
-              <input type="text" [(ngModel)]="giftForm.descricao" placeholder="Breve descrição">
-            </div>
-            <div class="form-group">
-              <label>Emoji</label>
-            </div>
-            <div class="form-group">
-              <label>URL da imagem</label>
-              <input type="text" [(ngModel)]="giftForm.imagemUrl" placeholder="https://...">
-            </div>
-          </div>
-          <button class="btn btn--primary" (click)="addPresente()">✨ Adicionar ao Catálogo</button>
-        </div>
-
-        <div class="catalogo-grid">
-          <div class="catalogo-item" *ngFor="let p of catalogo">
-            <div class="catalogo-item__info">
-              <strong>{{ p.nome }}</strong>
-              <span>{{ p.valor | brl }}</span>
-              <small *ngIf="p.descricao">{{ p.descricao }}</small>
-            </div>
-            <button class="btn-icon btn-icon--danger" (click)="removePresente(p.id)" title="Remover">✕</button>
-          </div>
-          <div class="empty-row-inline" *ngIf="catalogo.length === 0">
-            Nenhum item no catálogo ainda.
-          </div>
-        </div>
-      </div>
-    </ng-container>
+    <!-- =============== CATALOGO ================ -->
+    <app-admin-catalogo-tab
+      *ngIf="activeTab === 'catalogo'"
+      [catalogo]="catalogo"
+      (reload)="loadData()">
+    </app-admin-catalogo-tab>
 
     <!-- ═══════════════ RECEBIDOS ═══════════════ -->
     <ng-container *ngIf="activeTab === 'presentes'">
-      <div class="section-card card">
-        <div class="section-card__header">
-          <h3 class="section-card__title">Presentes Recebidos</h3>
+    <div class="section-card card">
+    <div class="section-card__header">
+        <h3 class="section-card__title">Presentes Recebidos</h3>
+    </div>
+
+    <div class="summary-bar">
+        <div class="summary-bar__item">
+        <span class="summary-bar__label">Total arrecadado</span>
+        <span class="summary-bar__value">{{ totalArrecadado | brl }}</span>
+        </div>
+        <div class="summary-bar__item">
+        <span class="summary-bar__label">Presentes</span>
+        <span class="summary-bar__value">{{ presentesRecebidos.length }}</span>
+        </div>
+    </div>
+
+    <div class="presente-card" *ngFor="let p of presentesRecebidos">
+        <div class="presente-card__header">
+        <div class="presente-card__quem">
+            <strong>{{ p.nome }}</strong>
+            <span>{{ p.email }}</span>
+        </div>
+        <div class="presente-card__meta">
+            <span class="badge" [ngClass]="{
+            'badge--confirm': p.statusPagamento === 'PAGO',
+            'badge--pending': p.statusPagamento === 'PENDENTE',
+            'badge--decline': p.statusPagamento === 'EXPIRADO'
+            }">{{ statusPagLabel(p.statusPagamento) }}</span>
+            <span class="presente-card__forma">{{ pagamentoLabel(p.formaPagamento) }}</span>
+            <strong class="presente-card__total">{{ p.total | brl }}</strong>
+        </div>
         </div>
 
-        <div class="summary-bar">
-          <div class="summary-bar__item">
-            <span class="summary-bar__label">Total arrecadado</span>
-            <span class="summary-bar__value">{{ totalArrecadado | brl }}</span>
-          </div>
-          <div class="summary-bar__item">
-            <span class="summary-bar__label">Presentes</span>
-            <span class="summary-bar__value">{{ presentesRecebidos.length }}</span>
-          </div>
+        <div class="presente-card__itens">
+        <span class="presente-card__item" *ngFor="let item of p.itens">
+            {{ item.nomePresente }}
+            <small>{{ item.valorPago | brl }}</small>
+        </span>
         </div>
 
-        <div class="presente-card" *ngFor="let p of presentesRecebidos">
-          <div class="presente-card__header">
-            <div class="presente-card__quem">
-              <strong>{{ p.nome }}</strong>
-              <span>{{ p.email }}</span>
-            </div>
-            <div class="presente-card__meta">
-              <span class="badge" [ngClass]="{
-                'badge--confirm': p.statusPagamento === 'PAGO',
-                'badge--pending': p.statusPagamento === 'PENDENTE',
-                'badge--decline': p.statusPagamento === 'EXPIRADO'
-              }">{{ statusPagLabel(p.statusPagamento) }}</span>
-              <span class="presente-card__forma">{{ pagamentoLabel(p.formaPagamento) }}</span>
-              <strong class="presente-card__total">{{ p.total | brl }}</strong>
-            </div>
-          </div>
-
-          <div class="presente-card__itens">
-            <span class="presente-card__item" *ngFor="let item of p.itens">
-              {{ item.nomePresente }}
-              <small>{{ item.valorPago | brl }}</small>
-            </span>
-          </div>
-
-          <div class="presente-card__msg" *ngIf="p.mensagem">
-            <span>💌</span> <em>"{{ p.mensagem }}"</em>
-          </div>
-
-          <div class="presente-card__data">
-            {{ p.criadoEm | date:'dd/MM/yyyy HH:mm' }}
-          </div>
+        <div class="presente-card__msg" *ngIf="p.mensagem">
+        <span>💌</span> <em>"{{ p.mensagem }}"</em>
         </div>
 
-        <div class="empty-card" *ngIf="presentesRecebidos.length === 0">
-          <span>🎁</span>
-          <p>Nenhum presente recebido ainda.</p>
+        <div class="presente-card__data">
+        {{ p.criadoEm | date:'dd/MM/yyyy HH:mm' }}
         </div>
-      </div>
+    </div>
+
+    <div class="empty-card" *ngIf="presentesRecebidos.length === 0">
+        <span>🎁</span>
+        <p>Nenhum presente recebido ainda.</p>
+    </div>
+    </div>
     </ng-container>
 
     <!-- ═══════════════ PRESENÇAS ═══════════════ -->

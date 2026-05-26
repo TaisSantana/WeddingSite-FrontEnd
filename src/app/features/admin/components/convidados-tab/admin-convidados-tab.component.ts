@@ -171,7 +171,7 @@ export class AdminConvidadosTabComponent {
       onConfirmar: () => {
         this.conviteSvc.removerConvidado(convidadoId)
         .subscribe({
-          next:  () => {  this.reload.emit(); this.toastSvc.success('Convidado removido.'); },
+          next:  () => {  this.reload.emit(); this.toastSvc.success('Convidado removido!'); },
           error: () => this.toastSvc.error('Erro ao remover convidado.'),
         });
       },
