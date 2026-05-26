@@ -32,14 +32,36 @@
 
     <div class="catalogo-grid">
         <div class="catalogo-item" *ngFor="let p of catalogo">
-            <div class="catalogo-item__info">
-                <strong>{{ p.nome }}</strong>
-                <span>{{ p.valor | brl }}</span>
-                <small *ngIf="p.descricao">{{ p.descricao }}</small>
-                <small *ngIf="p.imagemUrl">{{ p.imagemUrl }}</small>
+            <ng-container *ngIf="_editandoCatalogoId !== p.id">
+
+                <div class="catalogo-item__info">
+                    <strong>{{ p.nome }}</strong>
+                    <span>{{ p.valor | brl }}</span>
+                    <small *ngIf="p.descricao">{{ p.descricao }}</small>
+                    <small *ngIf="p.imagemUrl">{{ p.imagemUrl }}</small>
+                </div>
+                <button class="btn-icon" (click)="abrirEdicaoCatalogo(p)" title="Editar">✏️</button>
+                <button class="btn-icon btn-icon--danger" (click)="removePresente(p.id)" title="Remover">✕</button>
+            </ng-container>
+            <ng-container *ngIf="_editandoCatalogoId === p.id">
+                <div class="catalogo-item__info tr--editing" *ngIf="_editandoCatalogoId === p.id">
+                    <input class="inline-input" [(ngModel)]="catalogoEditForm.nome" placeholder="Nome">
+                    <input 
+                    class="inline-input"
+                    [(ngModel)]="catalogoEditForm.valor"
+                    placeholder="Valor">
+                    <input class="inline-input" *ngIf="p.descricao" [(ngModel)]="catalogoEditForm.descricao" placeholder="Descrição">
+                    <input class="inline-input" *ngIf="p.imagemUrl" [(ngModel)]="catalogoEditForm.imagemUrl" placeholder="imagemUrl">
+                </div>
+                <button class="btn btn--primary btn--sm"
+                    (click)="salvarEdicaoCatalogo(p)"
+                    [disabled]="_salvandoCatalogoId === p.id">
+                {{ _salvandoCatalogoId === p.id ? '⏳' : '💾' }}
+                </button>
+                <button class="btn btn--outline btn--sm" (click)="cancelarEdicaoCatalogo()">✕</button>
+            </ng-container>
+
             </div>
-            <button class="btn-icon btn-icon--danger" (click)="removePresente(p.id)" title="Remover">✕</button>
-        </div>
         <div class="empty-row-inline" *ngIf="catalogo.length === 0">
             Nenhum item no catálogo ainda.
         </div>

@@ -103,7 +103,7 @@ export class AdminCatalogoTabComponent {
       this.catalogoEditForm = { nome: g.nome, valor: g.valor, descricao: g.descricao, imagemUrl: g.imagemUrl};
   }
   
-  cancelarEdicaoConvidado(): void {
+  cancelarEdicaoCatalogo(): void {
     this._editandoCatalogoId = null;
   }
 
@@ -116,7 +116,7 @@ export class AdminCatalogoTabComponent {
       ...g,
       nome:          this.catalogoEditForm.nome.trim(),
       imagemUrl:     this.catalogoEditForm.imagemUrl ?? g.imagemUrl,
-      valor:         this.catalogoEditForm.valor,
+      valor:         Number(this.catalogoEditForm.valor),
       descricao:     this.catalogoEditForm.descricao
     };
 
