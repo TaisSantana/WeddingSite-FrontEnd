@@ -20,24 +20,24 @@ export class AuthService {
   login(req: AdminLoginRequest): Observable<AdminLoginResponse> {
     return this.http.post<AdminLoginResponse>(`${environment.apiUrl}/admin/login`, req).pipe(
       tap(res => {
-        localStorage.setItem(TOKEN_KEY, res.token);
+        sessionStorage.setItem(TOKEN_KEY, res.token);
         this._loggedIn.set(true);
       })
     );
   }
 
   logout(): void {
-    localStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
     this._loggedIn.set(false);
     this.router.navigate(['/admin']);
   }
 
   getToken(): string | null {
-    const token = localStorage.getItem(TOKEN_KEY);
+    const token = sessionStorage.getItem(TOKEN_KEY);
     if (!token) return null;
     // valida expiração antes de retornar
     if (!this.isTokenValid(token)) {
-      localStorage.removeItem(TOKEN_KEY);
+      sessionStorage.removeItem(TOKEN_KEY);
       this._loggedIn.set(false);
       return null;
     }
@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   private hasValidToken(): boolean {
-    const token = localStorage.getItem(TOKEN_KEY);
+    const token = sessionStorage.getItem(TOKEN_KEY);
     if (!token) return false;
     return this.isTokenValid(token);
   }
@@ -55,12 +55,12 @@ export class AuthService {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const expMs   = payload.exp * 1000;
       if (Date.now() >= expMs) {
-        localStorage.removeItem(TOKEN_KEY);
+        sessionStorage.removeItem(TOKEN_KEY);
         return false;
       }
       return true;
     } catch {
-      localStorage.removeItem(TOKEN_KEY);
+      sessionStorage.removeItem(TOKEN_KEY);
       return false;
     }
   }

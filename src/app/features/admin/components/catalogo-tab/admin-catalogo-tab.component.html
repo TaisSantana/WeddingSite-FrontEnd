@@ -1,71 +1,111 @@
 <app-confirm-modal #confirmModal></app-confirm-modal>
 
 <div class="section-card card">
-    <div class="section-card__header">
-        <h3 class="section-card__title">Catálogo de Presentes</h3>
-        <button class="btn btn--primary btn--sm" (click)="showGiftForm = !showGiftForm">
-        {{ showGiftForm ? '✕ Cancelar' : '+ Novo Item' }}
-        </button>
-    </div>
+  <div class="section-card__header">
+    <h3 class="section-card__title">Catálogo de Presentes</h3>
+    <button class="btn btn--primary btn--sm" (click)="showGiftForm = !showGiftForm">
+      {{ showGiftForm ? '✕ Cancelar' : '+ Novo Item' }}
+    </button>
+  </div>
 
-    <div class="form-panel" *ngIf="showGiftForm">
-        <div class="form-panel__grid">
-            <div class="form-group">
-                <label>Nome *</label>
-                <input type="text" [(ngModel)]="catalogoForm.nome" placeholder="Ex: Jogo de panelas">
-            </div>
-            <div class="form-group">
-                <label>Valor (R$) *</label>
-                <input type="number" [(ngModel)]="catalogoForm.valor" placeholder="150.00" min="1">
-            </div>
-            <div class="form-group full">
-                <label>Descrição</label>
-                <input type="text" [(ngModel)]="catalogoForm.descricao" placeholder="Breve descrição">
-            </div>
-            <div class="form-group">
-                <label>URL da imagem</label>
-                <input type="text" [(ngModel)]="catalogoForm.imagemUrl" placeholder="https://...">
-            </div>
+  <div class="form-panel" *ngIf="showGiftForm">
+    <div class="form-panel__grid">
+        <div class="form-group">
+            <label>Nome *</label>
+            <input type="text" [(ngModel)]="catalogoForm.nome" placeholder="Ex: Jogo de panelas">
         </div>
-        <button class="btn btn--primary" (click)="addPresente()">✨ Adicionar ao Catálogo</button>
+        <div class="form-group">
+            <label>Valor (R$) *</label>
+            <input
+            type="text"
+            prefix="R$ "
+            mask="separator.2"
+            thousandSeparator="."
+            decimalMarker=","
+            separatorLimit="9999999"
+            [(ngModel)]="catalogoForm.valor"
+            placeholder="R$ 0,00">  
+        </div>
+        <div class="form-group full">
+            <label>Descrição</label>
+            <input type="text" [(ngModel)]="catalogoForm.descricao" placeholder="Breve descrição">
+        </div>
+        <div class="form-group full">
+            <label>URL da imagem</label>
+            <input type="text" [(ngModel)]="catalogoForm.imagemUrl" placeholder="https://...">
+        </div>
     </div>
+    <button class="btn btn--primary" (click)="addPresente()">✨ Adicionar ao Catálogo</button>
+  </div>
 
-    <div class="catalogo-grid">
-        <div class="catalogo-item" *ngFor="let p of catalogo">
-            <ng-container *ngIf="_editandoCatalogoId !== p.id">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Valor</th>
+        <th>Descrição</th>
+        <th>Imagem</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let p of catalogo">
 
-                <div class="catalogo-item__info">
-                    <strong>{{ p.nome }}</strong>
-                    <span>{{ p.valor | brl }}</span>
-                    <small *ngIf="p.descricao">{{ p.descricao }}</small>
-                    <small *ngIf="p.imagemUrl">{{ p.imagemUrl }}</small>
-                </div>
-                <button class="btn-icon" (click)="abrirEdicaoCatalogo(p)" title="Editar">✏️</button>
-                <button class="btn-icon btn-icon--danger" (click)="removePresente(p.id)" title="Remover">✕</button>
-            </ng-container>
-            <ng-container *ngIf="_editandoCatalogoId === p.id">
-                <div class="catalogo-item__info tr--editing" *ngIf="_editandoCatalogoId === p.id">
-                    <input class="inline-input" [(ngModel)]="catalogoEditForm.nome" placeholder="Nome">
-                    <input 
-                    class="inline-input"
-                    [(ngModel)]="catalogoEditForm.valor"
-                    placeholder="Valor">
-                    <input class="inline-input" *ngIf="p.descricao" [(ngModel)]="catalogoEditForm.descricao" placeholder="Descrição">
-                    <input class="inline-input" *ngIf="p.imagemUrl" [(ngModel)]="catalogoEditForm.imagemUrl" placeholder="imagemUrl">
-                </div>
-                <button class="btn btn--primary btn--sm"
+        <!-- linha normal -->
+        <tr *ngIf="_editandoCatalogoId !== p.id">
+          <td>{{ p.nome }}</td>
+          <td>{{ p.valor | brl }}</td>
+          <td>{{ p.descricao || '—' }}</td>
+          <td>
+            <a *ngIf="p.imagemUrl" [href]="p.imagemUrl" target="_blank" class="link-truncado">
+              Ver imagem
+            </a>
+            <span *ngIf="!p.imagemUrl">—</span>
+          </td>
+          <td style="display:flex; gap:0.4rem; align-items:center;">
+            <button class="btn-icon" (click)="abrirEdicaoCatalogo(p)" title="Editar">✏️</button>
+            <button class="btn-icon btn-icon--danger" (click)="removePresente(p.id)" title="Remover">✕</button>
+          </td>
+        </tr>
+
+        <!-- linha de edição inline -->
+        <tr *ngIf="_editandoCatalogoId === p.id" class="tr--editing">
+          <td>
+            <input class="inline-input" [(ngModel)]="catalogoEditForm.nome" placeholder="Nome">
+          </td>
+          <td>
+           <input
+            class="inline-input"
+            prefix="R$ "
+            mask="separator.2"
+            thousandSeparator="."
+            decimalMarker=","
+            [ngModel]="catalogoEditForm.valor"
+            (ngModelChange)="catalogoEditForm.valor = $event"
+            placeholder="R$ 0,00">
+          </td>
+          <td>
+            <input class="inline-input" [(ngModel)]="catalogoEditForm.descricao" placeholder="Descrição">
+          </td>
+          <td>
+            <input class="inline-input" [(ngModel)]="catalogoEditForm.imagemUrl" placeholder="https://...">
+          </td>
+          <td style="display:flex; gap:0.4rem; align-items:center;">
+            <button class="btn btn--primary btn--sm"
                     (click)="salvarEdicaoCatalogo(p)"
                     [disabled]="_salvandoCatalogoId === p.id">
-                {{ _salvandoCatalogoId === p.id ? '⏳' : '💾' }}
-                </button>
-                <button class="btn btn--outline btn--sm" (click)="cancelarEdicaoCatalogo()">✕</button>
-            </ng-container>
+              {{ _salvandoCatalogoId === p.id ? '⏳' : '💾' }}
+            </button>
+            <button class="btn btn--outline btn--sm" (click)="cancelarEdicaoCatalogo()">✕</button>
+          </td>
+        </tr>
 
-            </div>
-        <div class="empty-row-inline" *ngIf="catalogo.length === 0">
-            Nenhum item no catálogo ainda.
-        </div>
-    </div>
-    
+      </ng-container>
+
+      <tr *ngIf="catalogo.length === 0">
+        <td colspan="5" class="empty-row">Nenhum item no catálogo ainda.</td>
+      </tr>
+    </tbody>
+  </table>
+
 </div>
-

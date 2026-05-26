@@ -10,6 +10,7 @@ import { ViewChild } from '@angular/core';
 import { CatalogoPresenteService } from 'src/app/features/catalogo-presente/catalogo-presente.service';
 import { CatalogoPresente, CatalogoPresenteForm } from 'src/app/features/catalogo-presente/catalogo-presente.model';
 import { BrlPipe } from "../../../../shared/pipes/brl.pipe";
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-admin-catalogo-tab',
@@ -23,8 +24,11 @@ import { BrlPipe } from "../../../../shared/pipes/brl.pipe";
     NgFor,
     NgClass,
     ConfirmModalComponent,
-    BrlPipe
-]
+    BrlPipe,
+    NgxMaskDirective,
+    NgxMaskPipe,  
+  ],
+  providers: [provideNgxMask()]
 })
 export class AdminCatalogoTabComponent {
 
@@ -66,17 +70,6 @@ export class AdminCatalogoTabComponent {
   }
 
   removePresente(id: number): void {
-    if (!confirm('Remover este presente do catálogo?')) return;
-    this.catalogoSvc.deletar(id).subscribe({
-      next: () => {
-        this.toastSvc.success('Presente removido.');
-        this.reload.emit();
-      },
-      error: () => this.toastSvc.error('Erro ao remover.'),
-    });
-  }
-
-  removerPresente(id: number): void {
     const pres = this.catalogo.find(c => c.id === id);
 
     this.confirmModal.open({
@@ -136,7 +129,6 @@ export class AdminCatalogoTabComponent {
       },
     });
   }
-    
   
 
 
