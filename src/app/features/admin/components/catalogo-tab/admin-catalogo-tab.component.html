@@ -53,24 +53,27 @@
 
         <!-- linha normal -->
         <tr *ngIf="_editandoCatalogoId !== p.id">
-          <td>{{ p.nome }}</td>
-          <td>{{ p.valor | brl }}</td>
-          <td>{{ p.descricao || '—' }}</td>
-          <td>
+            <td>{{ p.nome }}</td>
+            <td>{{ p.valor | brl }}</td>
+            <td>{{ p.descricao || '—' }}</td>
+            <td>
             <a *ngIf="p.imagemUrl" [href]="p.imagemUrl" target="_blank" class="link-truncado">
-              Ver imagem
+                Ver imagem
             </a>
             <span *ngIf="!p.imagemUrl">—</span>
-          </td>
-          <td style="display:flex; gap:0.4rem; align-items:center;">
-            <button class="btn-icon" (click)="abrirEdicaoCatalogo(p)" title="Editar">✏️</button>
-            <button class="btn-icon btn-icon--danger" (click)="removePresente(p.id)" title="Remover">✕</button>
-          </td>
+            </td>
+
+            <td>
+            <div style="display:flex; gap:0.4rem; align-items:center;">
+                <button class="btn-icon" (click)="abrirEdicaoCatalogo(p)" title="Editar">✏️</button>
+                <button class="btn-icon btn-icon--danger" (click)="removePresente(p.id)" title="Remover">✕</button>
+            </div>
+            </td>
         </tr>
 
         <!-- linha de edição inline -->
         <tr *ngIf="_editandoCatalogoId === p.id" class="tr--editing">
-          <td>
+          <td style="position: relative;">
             <input class="inline-input" [(ngModel)]="catalogoEditForm.nome" placeholder="Nome">
           </td>
           <td>
