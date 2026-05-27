@@ -45,7 +45,7 @@ import { Component } from '@angular/core';
           </div>
           <div class="detail">
             <span>📱</span>
-            <p>Em caso de dúvida, use o Google Maps com o link abaixo ou ligue para os noivos.</p>
+            <p>Em caso de dúvida, use o Google Maps com o link abaixo ou mande mensagem para os noivos.</p>
           </div>
           <br>
           <a
