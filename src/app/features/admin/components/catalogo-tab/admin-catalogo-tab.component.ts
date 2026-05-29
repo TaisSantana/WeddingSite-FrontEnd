@@ -80,7 +80,7 @@ export class AdminCatalogoTabComponent {
         this.catalogoSvc.deletar(id)
         .subscribe({
           next:  () => {  this.reload.emit(); this.toastSvc.success('Presente removido!'); },
-          error: () => this.toastSvc.error('Erro ao remover convidado.'),
+          error: () => this.toastSvc.error('Erro ao remover convite.'),
         });
       },
     });

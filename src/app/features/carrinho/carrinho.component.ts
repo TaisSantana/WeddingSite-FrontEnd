@@ -56,7 +56,7 @@ export class CatalogoPresenteComponent implements OnInit, OnDestroy {
 
   // ── Checkout cartão ───────────────────────
   // true = sandbox (testes), false = produção
-  private useSandbox = true;
+  private useSandbox = false;
 
   ngOnInit(): void {}
 
