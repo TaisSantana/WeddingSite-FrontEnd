@@ -378,37 +378,62 @@
   grid-column: 1 / -1;
   text-align: center;
   padding: 4rem 2rem;
+  background: linear-gradient(160deg, var(--serenity-pale) 0%, var(--lilac-pale) 100%);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--serenity-light);
+  position: relative;
+  overflow: hidden;
+
+  // ornamento de fundo
+  &::before {
+    content: '💙';
+    position: absolute;
+    font-size: 12rem;
+    opacity: 0.04;
+    top: -2rem;
+    right: -1rem;
+    pointer-events: none;
+  }
 
   &__icon {
-    font-size: 4rem;
+    font-size: 5rem;
     display: block;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
+    animation: fadeInUp 0.6s ease both;
   }
 
   &__title {
     font-family: var(--font-serif);
-    font-size: 2rem;
+    font-size: 2.4rem;
     font-style: italic;
     color: var(--text-dark);
     margin-bottom: 1rem;
+    animation: fadeInUp 0.6s 0.1s ease both;
   }
 
   &__sub {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--text-mid);
-    line-height: 1.8;
-    margin-bottom: 1.2rem;
+    line-height: 1.9;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.6s 0.2s ease both;
+
+    strong { color: var(--text-dark); }
   }
 
   &__badge {
     display: inline-block;
-    background: var(--serenity-pale);
-    border: 1px solid var(--serenity-light);
+    background: white;
+    border: 1.5px solid var(--serenity-light);
     color: var(--serenity-dark);
     border-radius: 99px;
-    padding: 0.4rem 1.2rem;
+    padding: 0.5rem 1.5rem;
     font-size: 0.8rem;
     font-weight: 500;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    box-shadow: var(--shadow-sm);
+    animation: fadeInUp 0.6s 0.3s ease both;
   }
 }
 
