@@ -45,25 +45,40 @@
 }
 
 // ── HEADER ────────────────────────────────────────────────
+
+// No seu SCSS, substitua o bloco do .page-header__inner
+
 .page-header__inner {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center; // centraliza o conteúdo
+  justify-content: center;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
   padding: 2rem 1.5rem;
+
+  > div {
+    text-align: center;
+  }
+
+  .btn {
+    position: absolute;
+    right: 1.5rem;
+
+    @media (max-width: 600px) {
+      position: static;        // tira o absolute
+    }
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.5rem 1rem;
+  }
 }
 
-.page-header__inner > div {
-  text-align: center;
-}
-
-.page-header__inner .btn {
-  position: absolute;
-  right: 1.5rem;
-}
 // ── WRAPPER ───────────────────────────────────────────────
 .admin-wrapper {
   max-width: 1200px;
@@ -647,4 +662,50 @@
   color: var(--serenity-dark);
   padding: 0.2rem 0.65rem;
   border-radius: 6px;
+}
+
+
+.table-scroll-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  @media (max-width: 600px) {
+    margin: 0 -2rem;
+    padding: 0 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .data-table {
+    min-width: 540px;
+  }
+}
+
+
+.status-filter {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+
+  &__btn {
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    border: 1px solid rgba(146,168,209,0.25);
+    background: transparent;
+    font-size: 0.75rem;
+    font-family: var(--font-body);
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+
+    &:hover { background: var(--serenity-pale); color: var(--text-mid); }
+
+    &.active {
+      background: linear-gradient(135deg, var(--serenity-pale), var(--lilac-pale));
+      color: var(--serenity-dark);
+      border-color: var(--serenity-light);
+      font-weight: 600;
+    }
+  }
 }

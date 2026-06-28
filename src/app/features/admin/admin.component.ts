@@ -60,7 +60,22 @@ export class AdminComponent implements OnInit {
   }
 
   get ultimosPresentes(): PresenteRecebidoDTO[] {
-    return [...this.presentesRecebidos].reverse().slice(0, 5);
+    return [...this.presentesRecebidos]
+    .filter(p => p.statusPagamento === 'PAGO')
+    .reverse()
+    .slice(0, 5);
+  }
+
+  filtroStatus: 'PAGO' | 'PENDENTE' | 'EXPIRADO' | 'TODOS' = 'PAGO';
+
+  get presentesFiltrados(): PresenteRecebidoDTO[] {
+    if (this.filtroStatus === 'TODOS') return this.presentesRecebidos;
+    return this.presentesRecebidos.filter(p => p.statusPagamento === this.filtroStatus);
+  }
+
+
+  get totalPresentesPagos(): number {
+    return this.presentesRecebidos.filter(p => p.statusPagamento === 'PAGO').length;
   }
 
   get confirmados(): number {

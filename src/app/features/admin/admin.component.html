@@ -84,7 +84,7 @@
         </div>
         <div class="stat-card stat-card--lilac">
           <span class="stat-card__icon">🎀</span>
-          <div class="stat-card__value">{{ presentesRecebidos.length }}</div>
+          <div class="stat-card__value">{{ totalPresentesPagos }}</div>
           <div class="stat-card__label">Presentes Recebidos</div>
         </div>
         <div class="stat-card stat-card--gold">
@@ -113,37 +113,39 @@
         <div class="section-card__header">
           <h3 class="section-card__title">Últimos Presentes Recebidos</h3>
         </div>
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Quem</th>
-              <th>Itens</th>
-              <th>Total</th>
-              <th>Pagamento</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let p of ultimosPresentes">
-              <td>
-                <strong>{{ p.nome }}</strong><br>
-                <small style="color:var(--text-soft)">{{ p.email}}</small>
-              </td>
-              <td>
-               
-              </td>
-              <td>{{ p.total | brl }}</td>
-              <td>{{ pagamentoLabel(p.formaPagamento) }}</td>
-              <td>
-                <span class="badge" [ngClass]="{
-                  'badge--confirm': p.statusPagamento === 'PAGO',
-                  'badge--pending': p.statusPagamento === 'PENDENTE',
-                  'badge--decline': p.statusPagamento === 'EXPIRADO'
-                }">{{ statusPagLabel(p.statusPagamento) }}</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-scroll-wrapper">
+            <table class="data-table">
+            <thead>
+              <tr>
+                <th>Quem</th>
+                <th>Itens</th>
+                <th>Total</th>
+                <th>Pagamento</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of ultimosPresentes">
+                <td>
+                  <strong>{{ p.nome }}</strong><br>
+                  <small style="color:var(--text-soft)">{{ p.email}}</small>
+                </td>
+                <td>
+                
+                </td>
+                <td>{{ p.total | brl }}</td>
+                <td>{{ pagamentoLabel(p.formaPagamento) }}</td>
+                <td>
+                  <span class="badge" [ngClass]="{
+                    'badge--confirm': p.statusPagamento === 'PAGO',
+                    'badge--pending': p.statusPagamento === 'PENDENTE',
+                    'badge--decline': p.statusPagamento === 'EXPIRADO'
+                  }">{{ statusPagLabel(p.statusPagamento) }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div class="empty-card" *ngIf="presentesRecebidos.length === 0">
@@ -167,6 +169,22 @@
         <h3 class="section-card__title">Presentes Recebidos</h3>
     </div>
 
+        <!-- FILTRO -->
+    <div class="status-filter">
+      <button class="status-filter__btn" 
+              [class.active]="filtroStatus === 'PAGO'"
+              (click)="filtroStatus = 'PAGO'">✓ Pagos</button>
+      <button class="status-filter__btn"
+              [class.active]="filtroStatus === 'PENDENTE'"
+              (click)="filtroStatus = 'PENDENTE'">⏳ Pendentes</button>
+      <button class="status-filter__btn"
+              [class.active]="filtroStatus === 'EXPIRADO'"
+              (click)="filtroStatus = 'EXPIRADO'">✗ Expirados</button>
+      <button class="status-filter__btn"
+              [class.active]="filtroStatus === 'TODOS'"
+              (click)="filtroStatus = 'TODOS'">Todos</button>
+    </div>
+
     <div class="summary-bar">
         <div class="summary-bar__item">
         <span class="summary-bar__label">Total arrecadado</span>
@@ -178,7 +196,7 @@
         </div>
     </div>
 
-    <div class="presente-card" *ngFor="let p of presentesRecebidos">
+    <div class="presente-card" *ngFor="let p of presentesFiltrados">
         <div class="presente-card__header">
         <div class="presente-card__quem">
             <strong>{{ p.nome }}</strong>
@@ -211,7 +229,7 @@
         </div>
     </div>
 
-    <div class="empty-card" *ngIf="presentesRecebidos.length === 0">
+    <div class="empty-card" *ngIf="presentesFiltrados.length === 0">
         <span>🎁</span>
         <p>Nenhum presente recebido ainda.</p>
     </div>

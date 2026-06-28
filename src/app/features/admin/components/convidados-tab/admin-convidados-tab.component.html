@@ -46,83 +46,86 @@
     </div>
 </div>
 
-<table class="data-table">
-    <thead>
-    <tr>
-        <th>Código</th>
-        <th>Família</th>
-        <th>Convidado</th>
-        <th>Status</th>
-        <th>Ações</th>
-    </tr>
-    </thead>
-    <tbody>
-    <ng-container *ngFor="let conv of convites">
-        <ng-container *ngFor="let g of conv.convidados">
+<div class="table-scroll-wrapper">
 
-        <!-- linha normal -->
-        <tr *ngIf="_editandoConvidadoId !== g.id">
-            <td><span class="code-tag">{{ conv.codigo }}</span></td>
-            <td>{{ conv.familia }}</td>
-            <td>{{ g.nome }}</td>
-            <td>
-            <span class="badge" [ngClass]="statusClass(g.status)">
-                {{ statusLabel(g.status) }}
-            </span>
-            </td>
-            <td style="display:flex; gap:0.4rem; align-items:center;">
-                <button class="btn-icon" (click)="abrirEdicaoConvidado(g)" title="Editar">✏️</button>
-                <button class="btn-icon btn-icon--danger" (click)="removerConvidado(conv.id, g.id)" title="Remover">✕</button>
-            </td>
+    <table class="data-table">
+        <thead>
+        <tr>
+            <th>Código</th>
+            <th>Família</th>
+            <th>Convidado</th>
+            <th>Status</th>
+            <th>Ações</th>
         </tr>
+        </thead>
+        <tbody>
+        <ng-container *ngFor="let conv of convites">
+            <ng-container *ngFor="let g of conv.convidados">
 
-        <!-- linha de edição inline -->
-        <tr *ngIf="_editandoConvidadoId === g.id" class="tr--editing">
-            <td style="position: relative;">
-            <input class="inline-input"
-                    [(ngModel)]="convidadoEditForm.codigoConvite"
-                    (input)="filtrarCodigos($event)"
-                    (blur)="fecharSugestoes()"
-                    placeholder="Buscar código...">
-            
-            <div class="codigo-suggestions" 
-                *ngIf="codigoSugestoes.length > 0">
-                <div class="codigo-suggestion-item"
-                    *ngFor="let c of codigoSugestoes"
-                    (mousedown)="selecionarCodigo(c)">
-                <span class="code-tag">{{ c.codigo }}</span>
-                <span>{{ c.familia }}</span>
+            <!-- linha normal -->
+            <tr *ngIf="_editandoConvidadoId !== g.id">
+                <td><span class="code-tag">{{ conv.codigo }}</span></td>
+                <td>{{ conv.familia }}</td>
+                <td>{{ g.nome }}</td>
+                <td>
+                <span class="badge" [ngClass]="statusClass(g.status)">
+                    {{ statusLabel(g.status) }}
+                </span>
+                </td>
+                <td style="display:flex; gap:0.4rem; align-items:center;">
+                    <button class="btn-icon" (click)="abrirEdicaoConvidado(g)" title="Editar">✏️</button>
+                    <button class="btn-icon btn-icon--danger" (click)="removerConvidado(conv.id, g.id)" title="Remover">✕</button>
+                </td>
+            </tr>
+
+            <!-- linha de edição inline -->
+            <tr *ngIf="_editandoConvidadoId === g.id" class="tr--editing">
+                <td style="position: relative;">
+                <input class="inline-input"
+                        [(ngModel)]="convidadoEditForm.codigoConvite"
+                        (input)="filtrarCodigos($event)"
+                        (blur)="fecharSugestoes()"
+                        placeholder="Buscar código...">
+                
+                <div class="codigo-suggestions" 
+                    *ngIf="codigoSugestoes.length > 0">
+                    <div class="codigo-suggestion-item"
+                        *ngFor="let c of codigoSugestoes"
+                        (mousedown)="selecionarCodigo(c)">
+                    <span class="code-tag">{{ c.codigo }}</span>
+                    <span>{{ c.familia }}</span>
+                    </div>
                 </div>
-            </div>
-            </td>                  
-            <td>{{ conv.familia }}</td>
-            <td>
-            <input class="inline-input" [(ngModel)]="convidadoEditForm.nome" placeholder="Nome">
-            </td>
-            <td>
-            <select class="inline-select" [(ngModel)]="convidadoEditForm.status">
-                <option value="CONFIRMADO">✓ Confirmado</option>
-                <option value="TALVEZ">? Talvez</option>
-                <option value="NAO_VEM">✗ Não vem</option>
-                <option value="PENDENTE">⏳ Pendente</option>
-            </select>
-            </td>
-            <td style="display:flex; gap:0.4rem; align-items:center;">
-            <button class="btn btn--primary btn--sm"
-                    (click)="salvarEdicaoConvidado(g)"
-                    [disabled]="_salvandoConvidadoId === g.id">
-                {{ _salvandoConvidadoId === g.id ? '⏳' : '💾' }}
-            </button>                    
-            <button class="btn btn--outline btn--sm" (click)="cancelarEdicaoConvidado()">✕</button>
-            </td>
-        </tr>
+                </td>                  
+                <td>{{ conv.familia }}</td>
+                <td>
+                <input class="inline-input" [(ngModel)]="convidadoEditForm.nome" placeholder="Nome">
+                </td>
+                <td>
+                <select class="inline-select" [(ngModel)]="convidadoEditForm.status">
+                    <option value="CONFIRMADO">✓ Confirmado</option>
+                    <option value="TALVEZ">? Talvez</option>
+                    <option value="NAO_VEM">✗ Não vem</option>
+                    <option value="PENDENTE">⏳ Pendente</option>
+                </select>
+                </td>
+                <td style="display:flex; gap:0.4rem; align-items:center;">
+                <button class="btn btn--primary btn--sm"
+                        (click)="salvarEdicaoConvidado(g)"
+                        [disabled]="_salvandoConvidadoId === g.id">
+                    {{ _salvandoConvidadoId === g.id ? '⏳' : '💾' }}
+                </button>                    
+                <button class="btn btn--outline btn--sm" (click)="cancelarEdicaoConvidado()">✕</button>
+                </td>
+            </tr>
 
+            </ng-container>
         </ng-container>
-    </ng-container>
 
-    <tr *ngIf="convites.length === 0">
-        <td colspan="5" class="empty-row">Nenhuma resposta ainda.</td>
-    </tr>
-    </tbody>
-</table>
+        <tr *ngIf="convites.length === 0">
+            <td colspan="5" class="empty-row">Nenhuma resposta ainda.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </div>
