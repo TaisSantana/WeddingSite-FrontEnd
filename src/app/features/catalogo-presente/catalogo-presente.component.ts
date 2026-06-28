@@ -1,20 +1,19 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgClass } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PresenteRecebidoDTO } from '../presente-recebido/presente-recebido.model';
 import { ToastService } from 'src/app/shared/components/toast/toast.service';
 import { CarrinhoService } from '../carrinho/carrinho.service';
 import { BrlPipe } from 'src/app/shared/pipes/brl.pipe';
-import { NgFor, NgIf } from '@angular/common';
 import { CatalogoPresente } from './catalogo-presente.model';
 import { CatalogoPresenteService } from './catalogo-presente.service';
 
+type ViewMode = 'grid' | 'list';
 
 @Component({
   selector: 'app-gifts',
   standalone: true,
-  imports: [NgClass, FormsModule, BrlPipe,NgFor, NgIf],
+  imports: [NgClass, FormsModule, BrlPipe, NgFor, NgIf],
   templateUrl: './catalogo-presente.component.html',
   styleUrls: ['./catalogo-presente.component.scss'],
 })
@@ -24,24 +23,25 @@ export class CatalogoPresenteComponent implements OnInit {
   private toastSvc    = inject(ToastService);
   private router      = inject(Router);
 
-  busca = signal('');
+  busca    = signal('');
+  viewMode = signal<ViewMode>('grid');
   presentes = signal<CatalogoPresente[]>([]);
 
   presentesFiltrados = computed(() => {
     const termo = this.busca().toLowerCase();
-  
-    return this.presentes()
-      .filter(p =>
-        p.nome.toLowerCase().includes(termo) ||
-        (p.descricao || '').toLowerCase().includes(termo));
+    return this.presentes().filter(p =>
+      p.nome.toLowerCase().includes(termo) ||
+      (p.descricao || '').toLowerCase().includes(termo)
+    );
   });
-
 
   ngOnInit(): void {
     this.presenteSvc.listar().subscribe(p => this.presentes.set(p));
   }
 
-  isInCart(id: number): boolean { return this.cartSvc.has(id); }
+  isInCart(id: number): boolean {
+    return this.cartSvc.has(id);
+  }
 
   addToCart(presente: CatalogoPresente): void {
     const ok = this.cartSvc.add(presente);
@@ -53,12 +53,15 @@ export class CatalogoPresenteComponent implements OnInit {
     }
   }
 
-  trackById(index: number, item: any) {
-    return item.id;
+  setViewMode(mode: ViewMode): void {
+    this.viewMode.set(mode);
   }
-  
-  setBusca(valor: string) {
+
+  setBusca(valor: string): void {
     this.busca.set(valor);
   }
 
+  trackById(_index: number, item: CatalogoPresente): number {
+    return item.id;
+  }
 }

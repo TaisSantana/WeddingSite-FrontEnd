@@ -1,11 +1,11 @@
 <div class="page-header">
   <span class="section-eyebrow">Lista de casamento</span>
   <h1 class="section-title" style="font-weight: 700;">Nossos Presentes</h1>
-  <h3 class="section-title" style="font-size: 20px; font-weight: 700;">Mais do que objetos, queremos construir memórias, viver novas experiências e dar vida ao nosso novo lar. 🌙 <br>
-Por isso, preparamos com carinho algumas formas de contribuição para quem desejar fazer parte dessa nova jornada ao nosso lado. 🩵</h3>
+  <h3 class="section-title" style="font-size: 20px; font-weight: 700;">
+    Mais do que objetos, queremos construir memórias, viver novas experiências e dar vida ao nosso novo lar. 🌙 <br>
+    Por isso, preparamos com carinho algumas formas de contribuição para quem desejar fazer parte dessa nova jornada ao nosso lado. 🩵
+  </h3>
 
-
-  <!-- Banner explicativo -->
   <div class="gift-banner">
     <span class="gift-banner__icon">💡</span>
     <p class="gift-banner__text">
@@ -14,13 +14,11 @@ Por isso, preparamos com carinho algumas formas de contribuição para quem dese
       ao escolher um item, você contribui diretamente para os nossos sonhos e para a construção do nosso lar. 🏡
       <br><br>Os pagamentos podem ser feitos via <strong>Pix</strong> ou <strong>cartão de crédito</strong> em um ambiente totalmente seguro, através do Mercado Pago. 🩵
     </p>
-    
   </div>
 </div>
 
-<!-- FILTROS -->
-<div class="filters">
-
+<!-- BARRA DE BUSCA + TOGGLE MOBILE -->
+<div class="toolbar">
   <div class="search-bar">
     <input
       type="text"
@@ -30,23 +28,59 @@ Por isso, preparamos com carinho algumas formas de contribuição para quem dese
       class="search-bar__input"
     />
   </div>
+
+  <!-- Toggle exclusivo mobile -->
+  <div class="view-toggle">
+    <button
+      class="view-toggle__btn"
+      [class.active]="viewMode() === 'grid'"
+      (click)="setViewMode('grid')"
+      aria-label="Visualizar em grade"
+      title="Grade">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <rect x="1" y="1" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="10.5" y="1" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="1" y="10.5" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="10.5" y="10.5" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </button>
+    <button
+      class="view-toggle__btn"
+      [class.active]="viewMode() === 'list'"
+      (click)="setViewMode('list')"
+      aria-label="Visualizar em lista"
+      title="Lista">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <rect x="1" y="2" width="16" height="4" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="1" y="7.5" width="16" height="4" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="1" y="13" width="16" height="4" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </button>
+  </div>
 </div>
 
-<!-- GRID -->
-<div class="presentes-grid">
+<!-- CONTAGEM DE RESULTADOS (mobile) -->
+<p class="results-count" *ngIf="presentesFiltrados().length > 0">
+  {{ presentesFiltrados().length }} presente{{ presentesFiltrados().length !== 1 ? 's' : '' }} encontrado{{ presentesFiltrados().length !== 1 ? 's' : '' }}
+</p>
+
+<!-- GRID / LISTA -->
+<div
+  class="presentes-grid"
+  [class.presentes-grid--list]="viewMode() === 'list'">
 
   <div
     *ngFor="let p of presentesFiltrados(); trackBy: trackById"
-    class="gift-card card card--hover">
+    class="gift-card card card--hover"
+    [class.gift-card--list]="viewMode() === 'list'">
 
     <div class="gift-card__image">
       <img
-          class="gift-card__img"
-          [src]="p.imagemUrl"
-          [alt]="p.nome"
-        />
+        class="gift-card__img"
+        [src]="p.imagemUrl"
+        [alt]="p.nome"
+      />
     </div>
-    
 
     <div class="gift-card__body">
       <h3 class="gift-card__name">{{ p.nome }}</h3>
@@ -56,23 +90,18 @@ Por isso, preparamos com carinho algumas formas de contribuição para quem dese
         <span class="gift-card__price">{{ p.valor | brl }}</span>
       </div>
 
-      <!-- BOTÃO -->
       <button
         class="btn btn--full gift-card__btn"
         [class.btn--primary]="!isInCart(p.id)"
         [class.btn--outline]="isInCart(p.id)"
         (click)="addToCart(p)">
-        <!-- DISPONÍVEL -->
         <ng-container *ngIf="isInCart(p.id); else comprar">
           🛒 No carrinho
         </ng-container>
-      
         <ng-template #comprar>
           🎁 Presentear
         </ng-template>
-
       </button>
-
     </div>
   </div>
 
