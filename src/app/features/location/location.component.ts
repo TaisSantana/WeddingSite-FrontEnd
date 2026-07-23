@@ -21,7 +21,7 @@ import { Component } from '@angular/core';
           </div>
           <div class="detail">
             <span>🕓</span>
-            <p>Cerimônia: <strong>19 de Setembro de 2026 às 15h</strong></p>
+            <p>Cerimônia: <strong>19 de Setembro de 2026 às 16h</strong></p>
           </div>
           <div class="detail">
             <span>🚗</span>
