@@ -29,6 +29,33 @@
     />
   </div>
 
+  <!-- Ordenação por valor -->
+  <div class="sort-toggle">
+    <span class="sort-toggle__label">Ordenar</span>
+    <button
+      class="sort-toggle__btn"
+      [class.active]="sortMode() === 'asc'"
+      (click)="setSortMode(sortMode() === 'asc' ? 'none' : 'asc')"
+      aria-label="Ordenar do menor para o maior valor"
+      title="Menor valor primeiro">
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+        <path d="M7 12V2M7 2L3 6M7 2L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Menor valor
+    </button>
+    <button
+      class="sort-toggle__btn"
+      [class.active]="sortMode() === 'desc'"
+      (click)="setSortMode(sortMode() === 'desc' ? 'none' : 'desc')"
+      aria-label="Ordenar do maior para o menor valor"
+      title="Maior valor primeiro">
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+        <path d="M7 2V12M7 12L3 8M7 12L11 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Maior valor
+    </button>
+  </div>
+
   <!-- Toggle exclusivo mobile -->
   <div class="view-toggle">
     <button

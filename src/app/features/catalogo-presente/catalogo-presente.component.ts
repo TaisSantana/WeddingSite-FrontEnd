@@ -9,6 +9,7 @@ import { CatalogoPresente } from './catalogo-presente.model';
 import { CatalogoPresenteService } from './catalogo-presente.service';
 
 type ViewMode = 'grid' | 'list';
+type SortMode = 'none' | 'asc' | 'desc';
 
 @Component({
   selector: 'app-gifts',
@@ -25,13 +26,21 @@ export class CatalogoPresenteComponent implements OnInit {
 
   busca    = signal('');
   viewMode = signal<ViewMode>('grid');
+  sortMode = signal<SortMode>('none');
   presentes = signal<CatalogoPresente[]>([]);
 
   presentesFiltrados = computed(() => {
     const termo = this.busca().toLowerCase();
-    return this.presentes().filter(p =>
+    const filtrados = this.presentes().filter(p =>
       p.nome.toLowerCase().includes(termo) ||
       (p.descricao || '').toLowerCase().includes(termo)
+    );
+
+    const ordem = this.sortMode();
+    if (ordem === 'none') return filtrados;
+
+    return [...filtrados].sort((a, b) =>
+      ordem === 'asc' ? a.valor - b.valor : b.valor - a.valor
     );
   });
 
@@ -59,6 +68,10 @@ export class CatalogoPresenteComponent implements OnInit {
 
   setBusca(valor: string): void {
     this.busca.set(valor);
+  }
+
+  setSortMode(mode: SortMode): void {
+    this.sortMode.set(mode);
   }
 
   trackById(_index: number, item: CatalogoPresente): number {
