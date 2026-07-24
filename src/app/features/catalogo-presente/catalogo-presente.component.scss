@@ -368,12 +368,9 @@
     &__desc {
       font-size: 0.72rem;
       line-height: 1.45;
-      // Limita a 2 linhas em grid
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
       margin-bottom: 0.6rem;
+      // Sem line-clamp: legendas (muitas vezes com humor/piada)
+      // precisam aparecer completas, mesmo que o card fique mais alto.
     }
 
     &__footer {
@@ -431,7 +428,6 @@
 
       .gift-card__desc {
         font-size: 0.75rem;
-        -webkit-line-clamp: 2;
         margin-bottom: 0.5rem;
       }
 
