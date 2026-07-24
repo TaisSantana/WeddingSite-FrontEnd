@@ -341,6 +341,71 @@
   }
 }
 
+// ── LOOT MISTERIOSO (item especial) ──────────
+.gift-card--especial {
+  border: 1.5px dashed var(--serenity);
+  background: linear-gradient(135deg, rgba(146,136,255,0.04), transparent);
+}
+
+.gift-card__image--especial {
+  background: linear-gradient(135deg, var(--serenity-pale), var(--lilac-pale));
+
+  .gift-card__emoji {
+    font-size: 3.5rem;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
+  }
+}
+
+.gift-card__footer--especial {
+  display: block;
+}
+
+.gift-card__valor-custom {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--serenity-light);
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  background: white;
+
+  &:focus-within {
+    border-color: var(--serenity);
+    box-shadow: 0 0 0 3px rgba(146, 136, 255, 0.2);
+  }
+}
+
+.gift-card__valor-prefix {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--serenity-dark);
+  font-weight: 600;
+}
+
+.gift-card__valor-input {
+  border: none;
+  outline: none;
+  font-size: 1.1rem;
+  font-family: var(--font-serif);
+  color: var(--text-dark);
+  width: 100%;
+  background: transparent;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  &:disabled {
+    color: var(--text-soft);
+  }
+}
+
 // ── EMPTY STATE ──────────────────────────────
 .empty-state {
   grid-column: 1 / -1;

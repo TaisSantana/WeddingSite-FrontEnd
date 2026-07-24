@@ -156,6 +156,54 @@
   class="presentes-grid"
   [class.presentes-grid--list]="viewMode() === 'list'">
 
+  <!-- LOOT MISTERIOSO DA GUILDA (item fixo, sempre primeiro, valor livre) -->
+  <div
+    class="gift-card gift-card--especial card card--hover"
+    [class.gift-card--list]="viewMode() === 'list'">
+
+    <div class="gift-card__image gift-card__image--especial">
+      <span class="gift-card__emoji">🎲</span>
+    </div>
+
+    <div class="gift-card__body">
+      <h3 class="gift-card__name">Loot Misterioso da Guilda</h3>
+      <p class="gift-card__desc">
+        Não sabe qual presente escolher? Contribua com o valor que quiser
+        para o nosso baú de aventuras! Toda ajuda é bem-vinda. ✨
+      </p>
+
+      <div class="gift-card__footer gift-card__footer--especial">
+        <div class="gift-card__valor-custom">
+          <span class="gift-card__valor-prefix">R$</span>
+          <input
+            type="number"
+            min="1"
+            step="0.01"
+            placeholder="0,00"
+            class="gift-card__valor-input"
+            [value]="valorLootMisterioso() ?? ''"
+            (input)="setValorLootMisterioso($any($event.target).value)"
+            [disabled]="isInCart(LOOT_MISTERIOSO_ID)"
+          />
+        </div>
+      </div>
+
+      <button
+        class="btn btn--full gift-card__btn"
+        [class.btn--primary]="!isInCart(LOOT_MISTERIOSO_ID)"
+        [class.btn--outline]="isInCart(LOOT_MISTERIOSO_ID)"
+        [disabled]="!isInCart(LOOT_MISTERIOSO_ID) && (!valorLootMisterioso() || valorLootMisterioso()! <= 0)"
+        (click)="addLootMisteriosoToCart()">
+        <ng-container *ngIf="isInCart(LOOT_MISTERIOSO_ID); else comprarLoot">
+          🛒 No carrinho
+        </ng-container>
+        <ng-template #comprarLoot>
+          🎁 Presentear
+        </ng-template>
+      </button>
+    </div>
+  </div>
+
   <div
     *ngFor="let p of presentesFiltrados(); trackBy: trackById"
     class="gift-card card card--hover"

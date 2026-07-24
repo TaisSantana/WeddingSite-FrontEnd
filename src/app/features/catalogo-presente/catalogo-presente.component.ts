@@ -33,6 +33,10 @@ export class CatalogoPresenteComponent implements OnInit {
   precoMax = signal<number | null>(null);
   filtroValorAberto = signal(false);
 
+  // ── LOOT MISTERIOSO DA GUILDA (item especial, valor livre) ──
+  readonly LOOT_MISTERIOSO_ID = -1; // id reservado, não colide com presentes reais
+  valorLootMisterioso = signal<number | null>(null);
+
   presentesFiltrados = computed(() => {
     const termo = this.busca().toLowerCase();
     let filtrados = this.presentes().filter(p =>
@@ -105,5 +109,29 @@ export class CatalogoPresenteComponent implements OnInit {
 
   trackById(_index: number, item: CatalogoPresente): number {
     return item.id;
+  }
+
+  // ── Métodos do Loot Misterioso ──
+  setValorLootMisterioso(valor: string): void {
+    const num = valor.trim() === '' ? null : Number(valor);
+    this.valorLootMisterioso.set(num === null || isNaN(num) || num <= 0 ? null : num);
+  }
+
+  addLootMisteriosoToCart(): void {
+    const valor = this.valorLootMisterioso();
+    if (!valor || valor <= 0) {
+      this.toastSvc.error('Informe um valor para presentear o Loot Misterioso 🎲');
+      return;
+    }
+
+    const presenteEspecial: CatalogoPresente = {
+      id: this.LOOT_MISTERIOSO_ID,
+      nome: 'Loot Misterioso da Guilda',
+      descricao: 'Contribuição livre para o nosso baú de aventuras.',
+      valor,
+      imagemUrl: '',
+    };
+
+    this.addToCart(presenteEspecial);
   }
 }
