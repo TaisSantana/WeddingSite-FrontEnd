@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastService } from 'src/app/shared/components/toast/toast.service';
 import { CarrinhoService } from '../carrinho/carrinho.service';
@@ -9,12 +9,12 @@ import { CatalogoPresente } from './catalogo-presente.model';
 import { CatalogoPresenteService } from './catalogo-presente.service';
 
 type ViewMode = 'grid' | 'list';
-type SortMode = 'none' | 'asc' | 'desc';
+type SortMode = 'asc' | 'desc';
 
 @Component({
   selector: 'app-gifts',
   standalone: true,
-  imports: [NgClass, FormsModule, BrlPipe, NgFor, NgIf],
+  imports: [NgClass, FormsModule, BrlPipe, NgFor, NgIf, NgSwitch, NgSwitchCase],
   templateUrl: './catalogo-presente.component.html',
   styleUrls: ['./catalogo-presente.component.scss'],
 })
@@ -26,7 +26,7 @@ export class CatalogoPresenteComponent implements OnInit {
 
   busca    = signal('');
   viewMode = signal<ViewMode>('grid');
-  sortMode = signal<SortMode>('none');
+  sortMode = signal<SortMode>('asc');
   presentes = signal<CatalogoPresente[]>([]);
 
   presentesFiltrados = computed(() => {
@@ -36,11 +36,8 @@ export class CatalogoPresenteComponent implements OnInit {
       (p.descricao || '').toLowerCase().includes(termo)
     );
 
-    const ordem = this.sortMode();
-    if (ordem === 'none') return filtrados;
-
     return [...filtrados].sort((a, b) =>
-      ordem === 'asc' ? a.valor - b.valor : b.valor - a.valor
+      this.sortMode() === 'asc' ? a.valor - b.valor : b.valor - a.valor
     );
   });
 
@@ -70,8 +67,8 @@ export class CatalogoPresenteComponent implements OnInit {
     this.busca.set(valor);
   }
 
-  setSortMode(mode: SortMode): void {
-    this.sortMode.set(mode);
+  toggleSort(): void {
+    this.sortMode.set(this.sortMode() === 'asc' ? 'desc' : 'asc');
   }
 
   trackById(_index: number, item: CatalogoPresente): number {
