@@ -59,6 +59,58 @@
     </button>
   </div>
 
+  <!-- Filtro por faixa de valor -->
+  <div class="price-filter">
+    <button
+      class="price-filter__btn"
+      [class.active]="filtroValorAberto() || temFiltroValorAtivo"
+      (click)="toggleFiltroValor()"
+      aria-label="Filtrar por faixa de valor"
+      title="Filtrar por faixa de valor">
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+        <path d="M2 4H12M4 7H10M6 10H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span>
+        Faixa de valor
+        <ng-container *ngIf="temFiltroValorAtivo">
+          ({{ precoMin() ?? '0' }}–{{ precoMax() ?? '∞' }})
+        </ng-container>
+      </span>
+    </button>
+
+    <div class="price-filter__panel" *ngIf="filtroValorAberto()">
+      <div class="price-filter__field">
+        <label for="precoMin">De (R$)</label>
+        <input
+          id="precoMin"
+          type="number"
+          min="0"
+          placeholder="0"
+          [value]="precoMin() ?? ''"
+          (input)="setPrecoMin($any($event.target).value)"
+        />
+      </div>
+      <div class="price-filter__field">
+        <label for="precoMax">Até (R$)</label>
+        <input
+          id="precoMax"
+          type="number"
+          min="0"
+          placeholder="Sem limite"
+          [value]="precoMax() ?? ''"
+          (input)="setPrecoMax($any($event.target).value)"
+        />
+      </div>
+      <button
+        class="price-filter__clear"
+        type="button"
+        *ngIf="temFiltroValorAtivo"
+        (click)="limparFiltroValor()">
+        Limpar
+      </button>
+    </div>
+  </div>
+
   <!-- Toggle exclusivo mobile -->
   <div class="view-toggle">
     <button

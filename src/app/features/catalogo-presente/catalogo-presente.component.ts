@@ -29,12 +29,21 @@ export class CatalogoPresenteComponent implements OnInit {
   sortMode = signal<SortMode>('asc');
   presentes = signal<CatalogoPresente[]>([]);
 
+  precoMin = signal<number | null>(null);
+  precoMax = signal<number | null>(null);
+  filtroValorAberto = signal(false);
+
   presentesFiltrados = computed(() => {
     const termo = this.busca().toLowerCase();
-    const filtrados = this.presentes().filter(p =>
+    let filtrados = this.presentes().filter(p =>
       p.nome.toLowerCase().includes(termo) ||
       (p.descricao || '').toLowerCase().includes(termo)
     );
+
+    const min = this.precoMin();
+    const max = this.precoMax();
+    if (min !== null) filtrados = filtrados.filter(p => p.valor >= min);
+    if (max !== null) filtrados = filtrados.filter(p => p.valor <= max);
 
     return [...filtrados].sort((a, b) =>
       this.sortMode() === 'asc' ? a.valor - b.valor : b.valor - a.valor
@@ -69,6 +78,29 @@ export class CatalogoPresenteComponent implements OnInit {
 
   toggleSort(): void {
     this.sortMode.set(this.sortMode() === 'asc' ? 'desc' : 'asc');
+  }
+
+  toggleFiltroValor(): void {
+    this.filtroValorAberto.update(v => !v);
+  }
+
+  setPrecoMin(valor: string): void {
+    const num = valor.trim() === '' ? null : Number(valor);
+    this.precoMin.set(num === null || isNaN(num) ? null : num);
+  }
+
+  setPrecoMax(valor: string): void {
+    const num = valor.trim() === '' ? null : Number(valor);
+    this.precoMax.set(num === null || isNaN(num) ? null : num);
+  }
+
+  limparFiltroValor(): void {
+    this.precoMin.set(null);
+    this.precoMax.set(null);
+  }
+
+  get temFiltroValorAtivo(): boolean {
+    return this.precoMin() !== null || this.precoMax() !== null;
   }
 
   trackById(_index: number, item: CatalogoPresente): number {
