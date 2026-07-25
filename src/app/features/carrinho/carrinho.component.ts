@@ -68,6 +68,13 @@ export class CatalogoPresenteComponent implements OnInit, OnDestroy {
   // ─────────────────────────────────────────
   // UI helpers
   // ─────────────────────────────────────────
+  
+  private mapItensParaRequest() {
+    return this.cart.items().map(i => ({
+      catalogoId: i.presente.id,
+      valorPersonalizado: i.presente.id === -1 ? i.presente.valor : undefined,
+    }));
+  }
   setPagamento(p: FormaPagamento): void {
     this.pagamento = p;
     this.erros = {};
@@ -125,7 +132,7 @@ export class CatalogoPresenteComponent implements OnInit, OnDestroy {
       nome:  this.nome.trim(),
       email: this.email.trim(),
       mensagem:    this.mensagem.trim() || undefined,
-      itens:       this.cart.items().map(i => ({ catalogoId: i.presente.id })),
+      itens:    this.mapItensParaRequest(),
     }).subscribe({
       next: (res) => {
         this.pixData = res;                        // res já É o PixDataDTO
@@ -186,7 +193,7 @@ export class CatalogoPresenteComponent implements OnInit, OnDestroy {
       nome:  this.nome.trim(),
       email: this.email.trim(),
       mensagem:    this.mensagem.trim() || undefined,
-      itens:       this.cart.items().map(i => ({ catalogoId: i.presente.id })),
+      itens:    this.mapItensParaRequest(),
     }).subscribe({
       next: (res) => {
         // Redireciona para o ambiente seguro do Mercado Pago
@@ -210,7 +217,7 @@ export class CatalogoPresenteComponent implements OnInit, OnDestroy {
       email:    this.email.trim(),
       mensagem:       this.mensagem.trim() || undefined,
       formaPagamento: forma as any,
-      itens:          this.cart.items().map(i => ({ catalogoId: i.presente.id })),
+      itens:          this.mapItensParaRequest(),
     }).subscribe();
     this.cart.clear();
     this.etapa = 'SUCESSO';

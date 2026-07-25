@@ -3,12 +3,17 @@ import { CatalogoPresente } from "../catalogo-presente/catalogo-presente.model";
 // --- Presente ---
 export type FormaPagamento = 'PIX' | 'CARTAO';
 
+export interface ItemCarrinhoRequest {
+  catalogoId: number;
+  valorPersonalizado?: number; // usado apenas quando catalogoId === -1 (Loot Misterioso)
+}
+
 export interface PaymentRequest {
   nome: string;
   email: string;
   mensagem?: string;
   formaPagamento: FormaPagamento;
-  itens: { catalogoId: number }[];
+  itens: ItemCarrinhoRequest[];
 }
 
 export interface PaymentResponse {
@@ -24,6 +29,7 @@ export interface PaymentResponse {
 // --- Pagamento Mercado Pago ---
 export interface ItemPagamentoDTO {
   catalogoId: number;
+  valorPersonalizado?: number; // usado apenas quando catalogoId === -1 (Loot Misterioso)
 }
 
 // PIX
