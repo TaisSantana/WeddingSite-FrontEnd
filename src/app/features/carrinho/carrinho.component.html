@@ -157,6 +157,10 @@
         Aguardando confirmação do pagamento...
       </div>
 
+      <p style="font-size:.72rem; color:var(--text-soft,#999); text-align:center; margin-top:.5rem">
+        Assim que confirmado, a confirmação chega por e-mail (verifique também o spam) 📩
+      </p>
+
       <button class="btn btn--ghost"
               style="margin-top:1.2rem; font-size:.8rem"
               (click)="voltarParaFormulario()">
@@ -186,6 +190,11 @@
       Enviamos uma confirmação para <strong>{{ email }}</strong>.<br>
       Os noivos também foram notificados com muito amor.
     </p>
+
+    <p class="success-panel__spam-hint">
+      📩 Não recebeu? Verifique também a caixa de <strong>spam</strong> ou <strong>lixo eletrônico</strong> — às vezes o e-mail cai lá.
+    </p>
+
     <div class="success-panel__badge" style="margin-bottom:0.5rem">
   {{ pagamento === 'PIX' ? '📱 Pago via Pix' : '💳 Pago via Cartão' }}
 </div>
